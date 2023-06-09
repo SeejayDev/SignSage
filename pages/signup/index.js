@@ -1,5 +1,6 @@
-import { firebase_auth } from "@firebase/config";
+import { firebase_auth, firebase_db } from "@firebase/config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore"; 
 import React, { useState } from 'react'
 
 const index = () => {
@@ -26,9 +27,17 @@ const index = () => {
     createUserWithEmailAndPassword(firebase_auth, payload.email, payload.password)
     .then((credentials) => {
       console.log(credentials)
-    })
-    .catch((error) => {
-      console.log(error.message)
+      const newUser = {
+        'role': 'student',
+        'username': payload.username
+      }
+
+      setDoc(doc(firebase_db, "users", credentials.user.uid), newUser)
+      .catch((error)=> {
+        console.log(error)
+      })
+    }).catch((error) => {
+      console.log(error)
     })
   }
 
