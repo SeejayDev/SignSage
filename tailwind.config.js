@@ -16,6 +16,7 @@ module.exports = {
       },
       fontFamily: {
         logo: ['var(--font-aoboshi)'],
+        poppins: ['var(--font-poppins)'],
       },
       colors: {
         'primary': '#24c6a9',
