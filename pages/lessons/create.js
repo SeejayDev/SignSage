@@ -3,13 +3,45 @@ import DirectionSelect from '@components/DirectionSelect'
 import Header from '@components/Header'
 import Toggle from '@components/Toggle'
 import React, { useState } from 'react'
+import { Plus } from 'src/icons/Plus'
+import { Trash } from 'src/icons/Trash'
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { firebase_db, firebase_storage } from '@firebase/config'
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
 
 const create = () => {
   const [curls, setCurls] = useState([0,0,0,0,0])
   const [directions, setDirections] = useState([0,0,0,0,0])
   const [sways, setSways] = useState([0,0,0,0,0])
+  const [images, setImages] = useState([])
+  const [errorMessage, setErrorMessage] = useState("")
 
   const fingerList = ["thumb", "index finger", "middle finger", "ring finger", "pinky"]
+
+  // input fields
+  const updateHeight = (e) => {
+    const textarea = e.target
+    if (textarea.clientHeight < textarea.scrollHeight) {
+      textarea.style.height = "0px"
+      textarea.style.height = textarea.scrollHeight + "px"
+    }
+  }
+
+  const handleUploadImage = (e) => {
+    if (e.target.files && e.target.files.length != 0) {
+      let chosenImages = [...images]
+      for (let i = 0; i < e.target.files.length; i++) {
+        chosenImages.push(e.target.files[i])
+      }
+      setImages(chosenImages)
+    }
+  }
+
+  const removeImage = (idx) => {
+    const tempArr = [...images]
+    tempArr.splice(idx, 1)
+    setImages(tempArr)
+  }
 
   const setCurl = (idxToChange, value) => {
     var newCurls = curls.map((curl, idx)=>{
@@ -47,46 +79,97 @@ const create = () => {
     setSways(newSways)
   }
 
+  const createLesson = async (e) => {
+    e.preventDefault()
+
+    const formData = new FormData(e.target)
+    const payload = Object.fromEntries(formData)
+    const { title, description, instructions, video_link } = payload
+
+    // validate fields
+    if (title === "") {setErrorMessage("Lesson title is required!"); return}
+    if (description === "") {setErrorMessage("Lesson description is required!"); return}
+    if (instructions === "") {setErrorMessage("Lesson instructions are required!"); return}
+    if (images.length < 1) {setErrorMessage("At least 1 image is required!"); return}
+
+    let uploaded_images = []
+    for (let i = 0; i < images.length; i++) {
+      const uuid = Math.random().toString(16).slice(2).toString() + new Date().getTime().toString()
+      let storageRef = ref(firebase_storage, `images/${uuid}`)
+      await uploadBytes(storageRef, images[i]).then(async (snapshot) => {
+        return getDownloadURL(snapshot.ref)
+      }).then((downloadURL) => {
+        uploaded_images[i] = downloadURL
+      })
+    }
+
+    const newLesson = {
+      lesson_title: title,
+      lesson_description: description,
+      lesson_instructions: instructions,
+      lesson_video_link: video_link,
+      lesson_images: uploaded_images,
+      lesson_pose_curls: curls,
+      lesson_pose_directions: directions,
+      lesson_pose_sways: sways
+    }
+
+    const docRef = await addDoc(collection(firebase_db, "lessons"), newLesson)
+
+    console.log("Document created: ")
+    console.log(docRef)
+  }
+
   return (
     <>
       <Header />
 
       <div className='container max-w-7xl mx-auto font-poppins'>
-        <div className='pt-16 flex font-bold text-4xl uppercase'>
-          <p className=''>New </p>
-          <p className="">lesson</p>
+        <div className='pt-12 flex font-bold text-4xl uppercase space-x-2 items-center'>
+          <p className="bg-primary p-2 rounded-md text-white">New</p>
+          <p className=''>lesson</p>
         </div>
 
-        <div className='flex w-full'>
+        <div className='flex w-full mt-8 space-x-8 mb-12'>
           <div className='w-1/2'>
-            <form>
-              <div className='w-full'>
-                <input type='text' name='title' className='px-4 py-1 border rounded-md' placeholder='Lesson Title' />
+            <form onSubmit={createLesson}>
+              <input type='text' name='title' className='rounded-md text-3xl w-full font-bold p-1' placeholder='Lesson Title' />
+
+              <textarea type='text' name='description' className='rounded-md w-full mt-1 p-1 resize-none' placeholder='Lesson Description' rows={1} />
+
+              <div className='w-full mt-4'>
+                <p className='font-bold p-1 text-xl'>Instructions: </p>
+                <textarea type='text' name='instructions' className='rounded-md w-full p-1 resize-none' placeholder='Content' rows={1} onChange={(e)=>updateHeight(e)} />
               </div>
-              
-              <div className='w-full'>
-                <textarea type='text' name='title' className='px-4 py-1 border rounded-md w-full' placeholder='Lesson Description' />
+             
+              <div className='w-full p-1 mt-4'>
+                <p className='font-bold text-xl'>Images: </p>
+                <input type='file' accept='image/*' className='hidden' id='images' multiple onChange={(e)=>handleUploadImage(e)} />
+                <div className='grid grid-cols-4 mt-4 gap-4'>
+                  {images.map((img, idx)=>(
+                    <div key={idx} className='w-full aspect-square relative border rounded-md overflow-hidden cursor-pointer' onClick={()=>removeImage(idx)}>
+                      <div className='absolute w-full h-full bg-gray-800 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center'>
+                        <Trash className="text-white w-12 h-12" />
+                      </div>
+  
+                      <img src={URL.createObjectURL(img)} className='w-full h-full object-cover' />
+                    </div>
+                  ))}
+
+                  <label className='aspect-square border rounded-md flex items-center justify-center flex-col cursor-pointer' htmlFor='images'>
+                    <Plus className="w-8 h-8" />
+                    <p className='mt-2'>Add Images</p>
+                  </label>
+                </div>
               </div>
 
-              <div>
-                <p>Instructions:</p>
-                <textarea type='text' name='title' className='px-4 py-1 border rounded-md w-full' />
+              <div className='p-1 mt-4'>
+                <p className='font-bold text-xl'>Video Link:</p>
+                <input type='text' name='video_link' className='px-4 py-1 border rounded-md mt-2 w-full' />
               </div>
 
-              <div className='w-full'>
-                <p className='px-2'>Images: </p>
-                <input type='text' name='title' className='px-4 py-1 border rounded-md' />
-              </div>
-
-              <div>
-                <p>Video Link</p>
-                <input type='text' name='title' className='px-4 py-1 border rounded-md' />
-              </div>
-
-              <div className='w-full'>
-                <p className='px-2'>Pose Code: </p>
-                <input type='text' name='title' className='px-4 py-1 border rounded-md' />
-              </div>
+              <button type='submit' className='mt-8 bg-primary rounded-md w-1/2 text-white py-2 font-bold'>Create Lesson</button>
+              {errorMessage !== "" && <p className='text-red-600 font-medium mt-2'>{errorMessage}</p>}
             </form>
           </div>
 
@@ -113,9 +196,6 @@ const create = () => {
               </div>
               )
             })}
-          <p>{curls.map((c)=>c)}</p>
-          <p>{directions.map((c)=>c)}</p>
-          <p>{sways.map((c)=>c)}</p>
           </div>
         </div>
         

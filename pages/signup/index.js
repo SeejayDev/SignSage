@@ -24,7 +24,7 @@ const index = () => {
     }
 
     // Create the new account
-    createUserWithEmailAndPassword(firebase_auth, payload.email, payload.password)
+    createUserWithEmailAndPassword(firebase_auth, email, password)
     .then((credentials) => {
       console.log(credentials)
       const newUser = {
