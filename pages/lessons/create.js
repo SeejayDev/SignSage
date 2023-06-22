@@ -90,7 +90,7 @@ const create = () => {
             </form>
           </div>
 
-          <div className='w-1/2 space-y-4 text-2xl'>
+          <div className='w-1/2 space-y-4 text-xl'>
             {fingerList.map((finger, idx)=>{
               return (
                 <div key={idx} className='flex items-center justify-between'>
