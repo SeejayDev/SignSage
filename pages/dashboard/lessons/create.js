@@ -8,6 +8,8 @@ import { Trash } from 'src/icons/Trash'
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { firebase_db, firebase_storage } from '@firebase/config'
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
+import { useRouter } from 'next/router'
+import Loading from 'src/icons/Loading'
 
 const create = () => {
   const [curls, setCurls] = useState([0,0,0,0,0])
@@ -15,6 +17,9 @@ const create = () => {
   const [sways, setSways] = useState([0,0,0,0,0])
   const [images, setImages] = useState([])
   const [errorMessage, setErrorMessage] = useState("")
+  const [isCreating, setIsCreating] = useState(false)
+
+  const router = useRouter()
 
   const fingerList = ["thumb", "index finger", "middle finger", "ring finger", "pinky"]
 
@@ -82,15 +87,17 @@ const create = () => {
   const createLesson = async (e) => {
     e.preventDefault()
 
+    setIsCreating(true)
+
     const formData = new FormData(e.target)
     const payload = Object.fromEntries(formData)
     const { title, description, instructions, video_link } = payload
 
     // validate fields
-    if (title === "") {setErrorMessage("Lesson title is required!"); return}
-    if (description === "") {setErrorMessage("Lesson description is required!"); return}
-    if (instructions === "") {setErrorMessage("Lesson instructions are required!"); return}
-    if (images.length < 1) {setErrorMessage("At least 1 image is required!"); return}
+    if (title === "") {setErrorMessage("Lesson title is required!"); setIsCreating(false); return;}
+    if (description === "") {setErrorMessage("Lesson description is required!"); setIsCreating(false); return}
+    if (instructions === "") {setErrorMessage("Lesson instructions are required!"); setIsCreating(false); return}
+    if (images.length < 1) {setErrorMessage("At least 1 image is required!"); setIsCreating(false); return}
 
     let uploaded_images = []
     for (let i = 0; i < images.length; i++) {
@@ -114,10 +121,8 @@ const create = () => {
       lesson_pose_sways: sways
     }
 
-    const docRef = await addDoc(collection(firebase_db, "lessons"), newLesson)
-
-    console.log("Document created: ")
-    console.log(docRef)
+    await addDoc(collection(firebase_db, "lessons"), newLesson)
+    router.push("/dashboard")
   }
 
   return (
@@ -168,7 +173,9 @@ const create = () => {
                 <input type='text' name='video_link' className='px-4 py-1 border rounded-md mt-2 w-full' />
               </div>
 
-              <button type='submit' className='mt-8 bg-primary rounded-md w-1/2 text-white py-2 font-bold'>Create Lesson</button>
+              <button type='submit' className='mt-8 bg-primary rounded-md w-1/2 text-white py-2 font-bold flex justify-center' disabled={isCreating}>
+                {isCreating ? <Loading className="w-6 h-6 animate-spin" /> : <p>Create Lesson</p>}
+              </button>
               {errorMessage !== "" && <p className='text-red-600 font-medium mt-2'>{errorMessage}</p>}
             </form>
           </div>
