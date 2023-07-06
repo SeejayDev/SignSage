@@ -1,6 +1,5 @@
 import '@styles/globals.css'
 import localFont from 'next/font/local'
-import { Poppins } from 'next/font/google'
 
 const aoboshiOne = localFont({
   src: '../public/fonts/AoboshiOne-Regular.ttf',

@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Toggle = (props) => {
-  const { handleChange } = props
+  const { handleChange, value = false } = props
 
   const [checked, setChecked] = useState(false)
 
@@ -9,6 +9,10 @@ const Toggle = (props) => {
     handleChange(event)
     setChecked(event.target.checked)
   }
+
+  useEffect(()=>{
+    setChecked(value)
+  }, [])
 
   return (
     <label className='relative cursor-pointer'>

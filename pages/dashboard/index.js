@@ -24,8 +24,10 @@ const index = () => {
   const deleteLesson = async (id) => {
     var performDelete = confirm("Are you sure you want to delete Lesson: " + id)
     if (performDelete) {
-      await deleteDoc(doc(firebase_db, 'lessons', id))
-      fetchLessons()
+      let lessonToDelete = lessonList.find((lesson) => lesson.id === id)
+      let imagesToDelete = lessonToDelete.lesson_images
+      // await deleteDoc(doc(firebase_db, 'lessons', id))
+      // fetchLessons()
     }
   }
   
@@ -37,10 +39,10 @@ const index = () => {
     <>
       <Header />
 
-      <RegularContainer className="mt-4">
+      <RegularContainer className="mt-8 ">
         <p className='font-bold text-3xl'>Welcome back, <span className='bg-primary rounded-md p-1 px-2 text-white'>Username</span></p>
-        <p className='mt-4 font-medium'>What would you like to do today?</p>
-        <div className='flex items-center space-x-4 mt-2'>
+        <p className='mt-3 font-medium'>What would you like to do today?</p>
+        <div className='flex items-center space-x-4 mt-4'>
           <p className='font-bold rounded-full px-4 py-0.5 bg-purple-600 text-white text-sm'>Teacher</p>
         </div>
 
@@ -86,7 +88,9 @@ const index = () => {
                       <Link href={`/lessons/${lesson.id}`}>
                         <p className='border-primary text-primary hover:bg-primary hover:text-white border-2 rounded-md py-1 px-4 text-sm font-bold cursor-pointer'>View</p>
                       </Link>
-                      <p className='border-primary text-primary hover:bg-primary hover:text-white border-2 rounded-md py-1 px-4 text-sm font-bold cursor-pointer'>Edit</p>
+                      <Link href={`/dashboard/lessons/edit/${lesson.id}`}>
+                        <p className='border-primary text-primary hover:bg-primary hover:text-white border-2 rounded-md py-1 px-4 text-sm font-bold cursor-pointer'>Edit</p>
+                      </Link>
                       <button 
                         onClick={()=>{deleteLesson(lesson.id)}}
                         className='border-red-600 text-red-600 hover:bg-red-600 hover:text-white border-2 rounded-md py-1 px-4 text-sm font-bold cursor-pointer'>

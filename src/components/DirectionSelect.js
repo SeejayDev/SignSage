@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 
 const DirectionSelect = (props) => {
-  const { handleChange } = props
+  const { handleChange, value = 0 } = props
 
-  const [directionIndex, setDirectionIndex] = useState(0)
+  const [directionIndex, setDirectionIndex] = useState(value)
 
   const onOptionChange = (e) => {
     handleChange(e)
@@ -34,9 +34,9 @@ const DirectionSelect = (props) => {
         }
       </div>
 
-      <select onChange={onOptionChange} className="absolute left-1/2 top-1/2 w-full h-full transform -translate-x-1/2 -translate-y-1/2 opacity-0 cursor-pointer text-lg" defaultValue="Vertical Up">
+      <select onChange={onOptionChange} className="absolute left-1/2 top-1/2 w-full h-full transform -translate-x-1/2 -translate-y-1/2 opacity-0 cursor-pointer text-lg" defaultValue={directionOptions[value].id}>
         {directionOptions.map((d)=>{
-          return <option key={d.id}>{d.orientation} {d.direction ? "to the " + d.direction : ""}</option>
+          return <option key={d.id} value={d.id}>{d.orientation} {d.direction ? "to the " + d.direction : ""}</option>
         })}
       </select>
     </div>

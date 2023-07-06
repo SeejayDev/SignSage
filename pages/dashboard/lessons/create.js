@@ -10,6 +10,7 @@ import { firebase_db, firebase_storage } from '@firebase/config'
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import Loading from 'src/icons/Loading'
+import HandposeSelect from '@components/HandposeSelect'
 
 const create = () => {
   const [curls, setCurls] = useState([0,0,0,0,0])
@@ -20,8 +21,6 @@ const create = () => {
   const [isCreating, setIsCreating] = useState(false)
 
   const router = useRouter()
-
-  const fingerList = ["thumb", "index finger", "middle finger", "ring finger", "pinky"]
 
   // input fields
   const updateHeight = (e) => {
@@ -46,42 +45,6 @@ const create = () => {
     const tempArr = [...images]
     tempArr.splice(idx, 1)
     setImages(tempArr)
-  }
-
-  const setCurl = (idxToChange, value) => {
-    var newCurls = curls.map((curl, idx)=>{
-      if (idx === idxToChange) {
-        return value
-      } else {
-        return curl
-      }
-    })
-
-    setCurls(newCurls)
-  }
-
-  const setDirection = (idxToChange, value) => {
-    var newDirections = directions.map((direction, idx)=>{
-      if (idx === idxToChange) {
-        return value
-      } else {
-        return direction
-      }
-    })
-
-    setDirections(newDirections)
-  }
-
-  const setSway = (idxToChange, checked) => {
-    var newSways = sways.map((sway, idx) => {
-      if (idx === idxToChange) {
-        return checked ? 1 : 0
-      } else {
-        return sway
-      }
-    })
-
-    setSways(newSways)
   }
 
   const createLesson = async (e) => {
@@ -129,8 +92,8 @@ const create = () => {
     <>
       <Header />
 
-      <div className='container max-w-7xl mx-auto font-poppins'>
-        <div className='pt-12 flex font-bold text-4xl uppercase space-x-2 items-center'>
+      <div className='container max-w-7xl mx-auto font-poppins mt-8'>
+        <div className='flex font-bold text-4xl uppercase space-x-2 items-center'>
           <p className="bg-primary p-2 rounded-md text-white">New</p>
           <p className=''>lesson</p>
         </div>
@@ -140,7 +103,7 @@ const create = () => {
             <form onSubmit={createLesson}>
               <input type='text' name='title' className='rounded-md text-3xl w-full font-bold p-1' placeholder='Lesson Title' />
 
-              <textarea type='text' name='description' className='rounded-md w-full mt-1 p-1 resize-none' placeholder='Lesson Description' rows={1} />
+              <textarea type='text' name='description' className='rounded-md w-full mt-1 p-1 resize-none' placeholder='Lesson Description' rows={1} onChange={(e)=>updateHeight(e)} />
 
               <div className='w-full mt-4'>
                 <p className='font-bold p-1 text-xl'>Instructions: </p>
@@ -181,31 +144,18 @@ const create = () => {
           </div>
 
           <div className='w-1/2 space-y-4 text-xl'>
-            {fingerList.map((finger, idx)=>{
-              return (
-                <div key={idx} className='flex items-center justify-between'>
-                  <div>
-                    <div className='flex items-center'>
-                      <p className=''>The {finger} should be</p>
-                      <CurlSelect handleChange={(e)=>setCurl(idx, e.target.selectedIndex)} />
-                    </div>
-      
-                    <div className='flex items-center mt-2'>
-                      <p>and pointing</p>
-                      <DirectionSelect handleChange={(e)=>setDirection(idx, e.target.selectedIndex)} />
-                    </div>
-                  </div>
-
-                  <div className='flex text-base items-center space-x-2'>
-                    <p>Allow sway: </p>
-                    <Toggle handleChange={(e)=>setSway(idx, e.target.checked)} />
-                  </div>
-              </div>
-              )
-            })}
+            <HandposeSelect
+              curls={curls}
+              directions={directions}
+              sways={sways}
+              setCurls={setCurls}
+              setDirections={setDirections}
+              setSways={setSways}  />
           </div>
         </div>
-        
+        <p>{curls}</p>
+        <p>{directions}</p>
+        <p>{sways}</p>
       </div>
     </>
   )

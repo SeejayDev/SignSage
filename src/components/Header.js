@@ -14,15 +14,15 @@ const Header = () => {
       <div className='flex items-center space-x-6'>
         {user ? (
           <>
+          <Link href="/dashboard">
+            <button className='font-medium'>Dashboard</button>
+          </Link>
             <p>User ID: {user.uid}</p>
             <button onClick={doLogout}>
               Logout
             </button>
           </>
         ) : (
-          // <Link href="/login">
-          //   <button className='bg-primary rounded-md px-4 py-2 text-white font-bold'>Login</button>
-          // </Link>
           <button onClick={()=>doLogin("seejaydev@gmail.com", "GitGudT@k3D3gr33")}>
             Login
           </button>
