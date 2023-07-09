@@ -153,9 +153,6 @@ const create = () => {
               setSways={setSways}  />
           </div>
         </div>
-        <p>{curls}</p>
-        <p>{directions}</p>
-        <p>{sways}</p>
       </div>
     </>
   )

@@ -74,10 +74,41 @@ const HandposeTest = (props) => {
     }
   }
 
+  // write a function that accepts two values representing the desired direction and the detected direction
+  // if the values do not match, check if sway is accepted and check if it matches any of the sway directions
+  // return false or true in the end
+
+  // 0: 'Vertical Up',
+  // 1: 'Vertical Down',
+  // 2: 'Horizontal Left',
+  // 3: 'Horizontal Right',
+  // 4: 'Diagonal Up Right',
+  // 5: 'Diagonal Up Left',
+  // 6: 'Diagonal Down Right',
+  // 7: 'Diagonal Down Left',
+
+  // Logic: If directions[i] === 0, allow for 4 and 5
+  // Logic: If directions[i] === 1, allow for 6 and 7
+  // Logic: If directions[i] === 2, allow for 5 and 7
+  // Logic: If directions[i] === 3, allow for 4 and 6
+  const checkDirectionWithSway = (lessonDirection, detectedDirection) => {
+    let directionArray = []
+    directionArray.push(lessonDirection)
+
+    switch (lessonDirection) {
+      case 0: directionArray.push(4,5); break;
+      case 1: directionArray.push(6,7); break;
+      case 2: directionArray.push(5,7); break;
+      case 3: directionArray.push(4,6); break;
+    }
+    
+    return directionArray.includes(detectedDirection)
+  }
+
   useEffect(()=> {
     let testResults = []
     for (let i = 0; i < 5; i++) {
-      if (detectedCurls[i] === curls[i] && detectedDirections[i] === directions[i]) {
+      if (checkDirectionWithSway(directions[i], detectedDirections[i]) && detectedCurls[i] === curls[i]) {
         testResults[i] = true
       } else {
         testResults[i] = false
@@ -140,6 +171,20 @@ const HandposeTest = (props) => {
                 <p>{finger}</p>
             </div>
           ))}
+        </div>
+        
+        <div className='flex'>
+          <div>
+            <p>Input Codes</p>
+            <p>{curls}</p>
+            <p>{directions}</p>
+          </div>
+
+          <div>
+            <p>Camera Codes</p>
+            <p>{detectedCurls}</p>
+            <p>{detectedDirections}</p>
+          </div>
         </div>
       </div>
     </>

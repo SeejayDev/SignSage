@@ -1,6 +1,7 @@
 import Header from '@components/Header'
-import { firebase_db } from '@firebase/config'
+import { firebase_db, firebase_storage } from '@firebase/config'
 import { collection, deleteDoc, doc, getDocs, limit, orderBy, query } from 'firebase/firestore'
+import { deleteObject, ref } from 'firebase/storage'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import Loading from 'src/icons/Loading'
@@ -26,8 +27,12 @@ const index = () => {
     if (performDelete) {
       let lessonToDelete = lessonList.find((lesson) => lesson.id === id)
       let imagesToDelete = lessonToDelete.lesson_images
-      // await deleteDoc(doc(firebase_db, 'lessons', id))
-      // fetchLessons()
+      for (let i = 0; i < imagesToDelete.length; i++) {
+        let fileRef = ref(firebase_storage, imagesToDelete[i])
+        await deleteObject(fileRef).catch((err) => console.log(err))
+      }
+      await deleteDoc(doc(firebase_db, 'lessons', id))
+      fetchLessons()
     }
   }
   

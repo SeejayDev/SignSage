@@ -8,14 +8,19 @@ const Header = () => {
   const {user, doLogout, authLoading, doLogin} = useFirebaseAuth()
 
   return (
-    <div className='flex container py-6 items-center justify-between w-full mx-auto max-w-7xl'>
-      <p className='font-logo text-primary text-3xl select-none'>SignSage</p>
+    <div className='flex container py-4 items-center justify-between w-full mx-auto max-w-7xl font-poppins'>
+      <Link href="/">
+        <p className='font-logo text-primary text-3xl select-none'>SignSage</p>
+      </Link>
       
-      <div className='flex items-center space-x-6'>
+      <div className='flex items-center space-x-6 font-medium'>
+        {/* Common Links */}
+        <Link href="/">Home</Link>
+
         {user ? (
           <>
           <Link href="/dashboard">
-            <button className='font-medium'>Dashboard</button>
+            <button className=''>Dashboard</button>
           </Link>
             <p>User ID: {user.uid}</p>
             <button onClick={doLogout}>
@@ -31,8 +36,8 @@ const Header = () => {
        {authLoading &&
        <Loading className="animate-spin" /> }
 
-        <Link href="/signup">
-          <button className='bg-primary rounded-md px-4 py-2 text-white font-bold'>Signup</button>
+        <Link href="/register">
+          <button className='bg-primary rounded-md px-4 py-2 text-white font-bold'>Register</button>
         </Link>
       </div>
     </div>

@@ -39,7 +39,7 @@ const ViewLesson = () => {
       <RegularContainer className="mt-8">
         <div>
           <div className='flex font-bold text-4xl uppercase space-x-2 items-center'>
-            <p className="bg-primary p-2 rounded-md text-white font-bold text-4xl">Lesson:</p>
+            <p className="bg-primary p-2 rounded-md text-white font-bold text-4xl">Lesson</p>
             <p>{lesson.lesson_title}</p>
           </div>
 
@@ -48,7 +48,7 @@ const ViewLesson = () => {
 
         <div className='flex space-x-8 mt-8'>
           <div className='w-1/2'>
-            <div className='w-1/2'>
+            <div className=''>
               <p className='font-bold text-xl'>Instructions: </p>
               <p className='w-full'>{lesson.lesson_instructions}</p>
             </div>
@@ -64,12 +64,14 @@ const ViewLesson = () => {
             </div>
 
             <div className='mt-8 relative'>
-              <iframe className='w-full aspect-video rounded-md border-primary border-8' src={lesson.lesson_video_link}></iframe>
+              {lesson.lesson_video_link !== "" &&
+                <iframe className='w-full aspect-video rounded-md border-primary border-8' src={lesson.lesson_video_link}></iframe>
+              }
             </div>
           </div>
 
           <div className='w-1/2 flex flex-col'>
-              <HandposeTest />
+              <HandposeTest curls={lesson.lesson_pose_curls} directions={lesson.lesson_pose_directions} />
           </div>
         </div>
           
