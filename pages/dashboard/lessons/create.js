@@ -11,6 +11,8 @@ import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import Loading from 'src/icons/Loading'
 import HandposeSelect from '@components/HandposeSelect'
+import HandposeSelectSingleLine from '@components/HandposeSelectSingleLine'
+import HandposeCamera from '@components/HandposeCamera'
 
 const create = () => {
   const [curls, setCurls] = useState([0,0,0,0,0])
@@ -99,7 +101,7 @@ const create = () => {
         </div>
 
         <div className='flex w-full mt-8 space-x-8 mb-12'>
-          <div className='w-1/2'>
+          <div className='w-2/5'>
             <form onSubmit={createLesson}>
               <input type='text' name='title' className='rounded-md text-3xl w-full font-bold p-1' placeholder='Lesson Title' />
 
@@ -143,8 +145,12 @@ const create = () => {
             </form>
           </div>
 
-          <div className='w-1/2 space-y-4 text-xl'>
-            <HandposeSelect
+          <div className='w-3/5 space-y-4'>
+            <div className='w-1/2 relative aspect-square'> 
+              <HandposeCamera />
+            </div>
+
+            <HandposeSelectSingleLine
               curls={curls}
               directions={directions}
               sways={sways}
@@ -152,6 +158,10 @@ const create = () => {
               setDirections={setDirections}
               setSways={setSways}  />
           </div>
+        </div>
+
+        <div>
+
         </div>
       </div>
     </>
