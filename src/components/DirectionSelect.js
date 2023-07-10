@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const DirectionSelect = (props) => {
   const { handleChange, value = 0 } = props
@@ -20,6 +20,10 @@ const DirectionSelect = (props) => {
     { id: "diOp7", orientation: "downwards", direction: "right" },
     { id: "diOp8", orientation: "downwards", direction: "left" },
   ]
+
+  useEffect(() => {
+    setDirectionIndex(value)
+  }, [value])
 
   return (
     <div className='relative items-center'>

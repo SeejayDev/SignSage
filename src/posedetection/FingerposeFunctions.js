@@ -10,7 +10,7 @@ const drawHandMesh = (predictions, ctx) => {
   if (predictions.length > 0) {
     predictions.forEach((prediction) => {
       const landmarks = prediction.keypoints
-      console.log(landmarks)
+      //console.log(landmarks)
 
       for (let j = 0; j < Object.keys(fingerJoints).length; j++) {
         let finger = Object.keys(fingerJoints)[j]

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CurlSelect from './CurlSelect'
 import DirectionSelect from './DirectionSelect'
 import Toggle from './Toggle'
@@ -54,7 +54,7 @@ const HandposeSelectSingleLine = (props) => {
     <>
       {fingerList.map((finger, idx)=>{
         return (
-          <div key={idx} className='flex items-center justify-between'>
+          <div key={idx+"pose"} className='flex items-center justify-between'>
             <div>
               <div className='flex items-center flex-wrap'>
                 <p className=''>The {finger} should be</p>
@@ -76,7 +76,7 @@ const HandposeSelectSingleLine = (props) => {
         <div className='grid grid-cols-5 gap-4 mt-4'>
           {fingerList.map((finger, idx) => {
             return (
-              <label key={idx} className='flex flex-col items-center text-center border-primary border-2 rounded-md p-2 cursor-pointer'>
+              <label key={idx+"sway"} className='flex flex-col items-center text-center border-primary border-2 rounded-md p-2 cursor-pointer'>
                 <p className='text-sm font-medium mb-2'>{finger}</p>
                 <Toggle handleChange={(e)=>setSway(idx, e.target.checked)} value={sways[idx]} />
               </label>

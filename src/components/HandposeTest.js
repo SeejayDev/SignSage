@@ -6,7 +6,7 @@ import HandposeCamera from './HandposeCamera';
 
 const HandposeTest = (props) => {
   const { curls = [0,0,0,0,0], directions = [0,0,0,0,0], sways = [0,0,0,0,0] } = props
-  const [activated, setActivated] = useState(false)
+  const [cameraActive, setCameraActive] = useState(false)
   const [detectedCurls, setDetectedCurls] = useState([])
   const [detectedDirections, setDetectedDirections] = useState([])
   const [testResults, setTestResults] = useState([false, false, true, false, false])
@@ -64,10 +64,10 @@ const HandposeTest = (props) => {
 
         
         <div className='relative w-96 h-96 mt-4'>
-          <HandposeCamera setDetectedCurls={setDetectedCurls} setDetectedDirections={setDetectedDirections} setActivated={setActivated} />
+          <HandposeCamera setDetectedCurls={setDetectedCurls} setDetectedDirections={setDetectedDirections} setActivated={setCameraActive} />
         </div>
 
-        <div className={`grid grid-cols-5 w-96 mx-auto gap-2 transition-all ${activated ? "mt-8" : "mt-4"}`}>
+        <div className={`grid grid-cols-5 w-96 mx-auto gap-2 transition-all ${cameraActive ? "mt-8" : "mt-4"}`}>
           {fingerList.map((finger, idx) => (
             <div 
               key={idx} 

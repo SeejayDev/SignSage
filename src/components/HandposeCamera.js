@@ -1,16 +1,23 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 import { Plus } from 'src/icons/Plus'
 import * as handPoseDetection from '@tensorflow-models/hand-pose-detection';
 import FingerPoseEstimator from 'src/posedetection/FingerPoseEstimator';
 import { drawHandMesh } from 'src/posedetection/FingerposeFunctions';
+import { Camera } from 'src/icons/Camera';
 
 const HandposeCamera = (props) => {
   const blankFunction = () => {}
-  const { setDetectedCurls = blankFunction, setDetectedDirections=blankFunction } = props
+  const { setDetectedCurls = blankFunction, setDetectedDirections=blankFunction, setActivated=blankFunction } = props
 
   const webcamRef = useRef(null)
   const canvasRef = useRef(null)
+  const [active, setActive] = useState(false)
+
+  const toggleActive = (value) => {
+    setActive(value)
+    setActivated(value)
+  }
 
   // function to perform the detection
   const runDetection = async () => {
@@ -77,7 +84,7 @@ const HandposeCamera = (props) => {
   return (
     <div className='w-full h-full relative'>
       <div className='bg-black w-full h-full rounded-md relative z-20 shadow-md overflow-hidden'>
-            {activated && 
+            {active && 
                 <div className='w-full h-full absolute top-0 left-0'>
                   <Webcam 
                     ref={webcamRef}
@@ -101,12 +108,12 @@ const HandposeCamera = (props) => {
 
             <div className='w-full h-full flex flex-col items-center justify-center text-white'>
               <p className=''>Turn camera on:</p>
-              <button id='camBtn' className='bg-white rounded-lg p-3 text-primary mt-2' onClick={()=>setActivated(!activated)}>
+              <button id='camBtn' className='bg-white rounded-lg p-3 text-primary mt-2' onClick={()=>toggleActive(!active)}>
                 <Camera className="w-8 h-8" />
               </button>
             </div>
           </div>
-          <div className={`bg-primary rounded-md absolute w-full h-full top-0 left-0 transition-transform z-10 shadow-md ${activated && "transform translate-x-4 translate-y-4"}`}></div>
+          <div className={`bg-primary rounded-md absolute w-full h-full top-0 left-0 transition-transform z-10 shadow-md ${active && "transform translate-x-4 translate-y-4"}`}></div>
     </div>
   )
 }

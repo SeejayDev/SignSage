@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const CurlSelect = (props) => {
   const { handleChange, value = 0 } = props
@@ -10,6 +10,10 @@ const CurlSelect = (props) => {
     handleChange(e)
     setCurlIndex(e.target.selectedIndex)
   }
+
+  useEffect(() => {
+    setCurlIndex(value)
+  }, [value])
 
   return (
     <div className='relative items-center'>

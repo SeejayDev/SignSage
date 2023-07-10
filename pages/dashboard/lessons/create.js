@@ -145,23 +145,33 @@ const create = () => {
             </form>
           </div>
 
-          <div className='w-3/5 space-y-4'>
-            <div className='w-1/2 relative aspect-square'> 
-              <HandposeCamera />
+          <div className='w-3/5'>
+            <p className='font-bold text-2xl'>Pose Creation</p>
+            
+            <div className='flex'>
+              <div className='w-1/3 relative aspect-square mt-2'> 
+                <HandposeCamera setDetectedCurls={setCurls} setDetectedDirections={setDirections} />
+              </div>
+
+              <div className='py-4 mx-12 space-y-4'>
+                <ol className='list-outside list-decimal'>
+                  <li>Use your device's camera to detect the pose values automatically.</li>
+                  <li>Click on the X button on the top right to turn off the camera.</li>
+                  <li>You can also manually set the values by clicking on them.</li>
+                </ol>
+              </div>
             </div>
-
-            <HandposeSelectSingleLine
-              curls={curls}
-              directions={directions}
-              sways={sways}
-              setCurls={setCurls}
-              setDirections={setDirections}
-              setSways={setSways}  />
+            
+            <div className='mt-8 space-y-4'>              
+              <HandposeSelectSingleLine
+                curls={curls}
+                directions={directions}
+                sways={sways}
+                setCurls={setCurls}
+                setDirections={setDirections}
+                setSways={setSways}  />
+            </div>
           </div>
-        </div>
-
-        <div>
-
         </div>
       </div>
     </>
