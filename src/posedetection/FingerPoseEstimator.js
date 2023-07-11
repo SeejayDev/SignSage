@@ -8,7 +8,7 @@ export default class FingerPoseEstimator {
 
       // curl estimation
       HALF_CURL_START_LIMIT: 85.0,
-      NO_CURL_START_LIMIT: 122.0,
+      NO_CURL_START_LIMIT: 140.0,
 
       // direction estimation
       DISTANCE_VOTE_POWER: 1.1,

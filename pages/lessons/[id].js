@@ -50,14 +50,14 @@ const ViewLesson = () => {
           <div className='w-1/2'>
             <div className=''>
               <p className='font-bold text-xl'>Instructions: </p>
-              <p className='w-full'>{lesson.lesson_instructions}</p>
+              <p className='w-full whitespace-pre-wrap'>{lesson.lesson_instructions}</p>
             </div>
 
-            <div className='grid grid-cols-4 mt-4 gap-4'>
+            <div className='grid grid-cols-3 mt-4 gap-4'>
               {lesson.lesson_images.map((img, idx)=> {
                 return (
                   <div key={idx} className='w-full aspect-square relative border rounded-md overflow-hidden'>
-                    <img src={img} className='w-full h-full object-cover' />
+                    <img src={img} className='w-full h-full object-contain' />
                   </div>
                 )
               })}
@@ -71,7 +71,7 @@ const ViewLesson = () => {
           </div>
 
           <div className='w-1/2 flex flex-col'>
-              <HandposeTest curls={lesson.lesson_pose_curls} directions={lesson.lesson_pose_directions} />
+            <HandposeTest curls={lesson.lesson_pose_curls} directions={lesson.lesson_pose_directions} />
           </div>
         </div>
           

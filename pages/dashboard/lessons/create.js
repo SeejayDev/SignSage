@@ -122,7 +122,7 @@ const create = () => {
                         <Trash className="text-white w-12 h-12" />
                       </div>
   
-                      <img src={URL.createObjectURL(img)} className='w-full h-full object-cover' />
+                      <img src={URL.createObjectURL(img)} className='w-full h-full object-contain' />
                     </div>
                   ))}
 

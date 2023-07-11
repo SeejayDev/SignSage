@@ -1,4 +1,6 @@
+import HandposeCamera from '@components/HandposeCamera'
 import HandposeSelect from '@components/HandposeSelect'
+import HandposeSelectSingleLine from '@components/HandposeSelectSingleLine'
 import Header from '@components/Header'
 import { firebase_db, firebase_storage } from '@firebase/config'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
@@ -138,7 +140,7 @@ const editLesson = () => {
         </div>
 
         <div className='flex w-full mt-8 space-x-8 mb-12'>
-          <div className='w-1/2'>
+          <div className='w-2/5'>
             <form onSubmit={updateLesson}>
               <input 
                 type='text' 
@@ -175,7 +177,7 @@ const editLesson = () => {
               <div className='w-full p-1 mt-4'>
                 <p className='font-bold text-xl'>Images: </p>
                 <input type='file' accept='image/*' className='hidden' id='images' multiple onChange={(e)=>handleUploadImage(e)} />
-                <div className='grid grid-cols-4 mt-4 gap-4'>
+                <div className='grid grid-cols-3 mt-4 gap-4'>
                   {lesson.lesson_images.map((img, idx)=> {
                     if (imagesToDelete.indexOf(img) < 0) {
                       return (
@@ -184,7 +186,7 @@ const editLesson = () => {
                             <Trash className="text-white w-12 h-12" />
                           </div>
 
-                          <img src={img} className='w-full h-full object-cover' />
+                          <img src={img} className='w-full h-full object-contain' />
                         </div>
                       )
                     }
@@ -223,14 +225,28 @@ const editLesson = () => {
             </form>
           </div>
 
-          <div className='w-1/2 space-y-4 text-xl'>
-            <HandposeSelect
+          <div className='w-3/5 space-y-4'>
+            <div className='flex'>
+              <div className='w-1/3 relative aspect-square'> 
+                <HandposeCamera setDetectedCurls={setCurls} setDetectedDirections={setDirections} />
+              </div>
+
+              <div className='py-4 mx-12 space-y-4'>
+                <ol className='list-outside list-decimal'>
+                  <li>Use your device's camera to detect the pose values automatically.</li>
+                  <li>Click on the X button on the top right to turn off the camera.</li>
+                  <li>You can also manually set the values by clicking on them.</li>
+                </ol>
+              </div>
+            </div>
+
+            <HandposeSelectSingleLine
                 curls={lesson.lesson_pose_curls}
                 directions={lesson.lesson_pose_directions}
                 sways={lesson.lesson_pose_sways}
                 setCurls={setCurls}
                 setDirections={setDirections}
-                setSways={setSways}  />
+                setSways={setSways} />
           </div>
         </div>
         

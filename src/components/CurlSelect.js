@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import { curlOptions } from 'src/posedetection/FingerposeValues'
 
 const CurlSelect = (props) => {
   const { handleChange, value = 0 } = props
 
-  const curlOptions = ["straight", "half-curled", "fully-curled"]
   const [curlIndex, setCurlIndex] = useState(value)
 
   const onOptionChange = (e) => {
