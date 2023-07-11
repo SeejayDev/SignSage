@@ -11,16 +11,16 @@ import RegularContainer from 'src/layouts/RegularContainer'
 const index = () => {
   const [lessonList, setLessonList] = useState(null)
 
-  const fetchLessons = useCallback(async () => {
+  const fetchLessons = async () => {
     const querySnapshot = await getDocs(query(collection(firebase_db, 'lessons'), orderBy('lesson_title'), limit(15)));
     let tempList = []
     querySnapshot.forEach((doc) => {
       var lesson = {...doc.data(), id: doc.id}
       tempList.push(lesson)
     })
-    console.log(tempList)
+    //console.log(tempList)
     setLessonList(tempList)
-  }, [])
+  }
 
   const deleteLesson = async (id) => {
     var performDelete = confirm("Are you sure you want to delete Lesson: " + id)
