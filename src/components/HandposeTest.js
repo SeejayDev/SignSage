@@ -77,7 +77,7 @@ const HandposeTest = (props) => {
         </div>
 
         
-        <div className='relative w-96 h-96 mt-4'>
+        <div className='relative w-72 h-72 2xl:w-96 2xl:h-96 mt-4'>
           <HandposeCamera setDetectedCurls={setDetectedCurls} setDetectedDirections={setDetectedDirections} setActivated={setCameraActive} />
         </div>
 
