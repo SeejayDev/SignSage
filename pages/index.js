@@ -29,6 +29,7 @@ export default function Home() {
               <div className="relative pr-6 pb-6">
                 <Image
                   src={heroImage}
+                  alt="Image of two people doing sign language"
                   className="w-full rounded-lg relative z-20" />
 
                 <div className="pl-6 pt-6 absolute w-full h-full top-0 left-0 z-10">
@@ -41,9 +42,9 @@ export default function Home() {
           <div className="mt-16">
             <p className="text-center text-2xl font-medium ">Developed with <span className="p-2 bg-primary text-white rounded-md">modern</span> frameworks and libraries</p>
             <div className="flex items-center space-x-12 justify-center mt-8">
-              <Image src={tailwindLogo} className="h-8 w-auto" />
-              <Image src={nextLogo} className="h-14 w-auto" />
-              <Image src={tensorflowLogo} className="h-12 w-auto" />
+              <Image src={tailwindLogo} className="h-8 w-auto" alt="Tailwind Logo"  />
+              <Image src={nextLogo} className="h-14 w-auto" alt="NextJS Logo" />
+              <Image src={tensorflowLogo} className="h-12 w-auto" alt="TensorFlow Logo"/>
             </div>
           </div>
         </RegularContainer>

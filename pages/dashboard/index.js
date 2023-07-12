@@ -4,16 +4,21 @@ import { collection, deleteDoc, doc, getDocs, limit, orderBy, query } from 'fire
 import { deleteObject, ref } from 'firebase/storage'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
+import useFirebaseAuth from 'src/hooks/useFirebaseAuth'
 import Loading from 'src/icons/Loading'
 import { Plus } from 'src/icons/Plus'
 import RegularContainer from 'src/layouts/RegularContainer'
 
 const index = () => {
   const [fetchedLessonList, setFetchedLessonList] = useState([])
+  const [fetchedCourseList, setFetchedCourseList] = useState([])
   const [lessonList, setLessonList] = useState(null)
+  const [courseList, setCourseList] = useState(null)
+
+  const { userProfile } = useFirebaseAuth()
 
   const fetchLessons = async () => {
-    const querySnapshot = await getDocs(query(collection(firebase_db, 'lessons'), orderBy('lesson_title'), limit(15)));
+    const querySnapshot = await getDocs(query(collection(firebase_db, 'lessons'), orderBy('lesson_title')));
     let tempList = []
     querySnapshot.forEach((doc) => {
       var lesson = {...doc.data(), id: doc.id}
@@ -22,6 +27,18 @@ const index = () => {
     //console.log(tempList)
     setFetchedLessonList(tempList)
     setLessonList(tempList)
+  }
+
+  const fetchCourses = async () => {
+    const querySnapshot = await getDocs(query(collection(firebase_db, 'courses'), orderBy('course_title')));
+    let tempList = []
+    querySnapshot.forEach((doc) => {
+      var course = {...doc.data(), id: doc.id}
+      tempList.push(course)
+    })
+    //console.log(tempList)
+    setFetchedCourseList(tempList)
+    setCourseList(tempList)
   }
 
   const deleteLesson = async (id) => {
@@ -54,6 +71,7 @@ const index = () => {
   
   useEffect(()=>{
     fetchLessons()
+    fetchCourses()
   }, [])
 
   return (
@@ -64,7 +82,7 @@ const index = () => {
         <p className='font-bold text-3xl'>Welcome back, <span className='bg-primary rounded-md p-1 px-2 text-white'>Username</span></p>
         <p className='mt-3 font-medium'>What would you like to do today?</p>
         <div className='flex items-center space-x-4 mt-4'>
-          <p className='font-bold rounded-full px-4 py-0.5 bg-purple-600 text-white text-sm'>Teacher</p>
+          <p className='font-bold rounded-full px-4 py-0.5 bg-purple-600 text-white text-sm'>{userProfile?.role}</p>
         </div>
 
         <div className='mt-8 flex'>
@@ -77,6 +95,40 @@ const index = () => {
                   <Plus className="w-5 h-5" />
                 </div>
               </Link>
+            </div>
+
+            <div className='mt-4'>
+              <input type='text' onChange={(e)=>filterLessons(e.target.value)} placeholder='Search for course' className='rounded-md p-2 border-2 w-full' />
+            </div>
+
+            <div className='space-y-2 mt-4'>
+              {!courseList && 
+                <div className='flex justify-center py-12'>
+                  <Loading className="text-primary animate-spin h-8 w-8" />
+                </div>
+              }
+              {courseList?.map((course)=>{
+                return (
+                  <div key={course.id} className='flex justify-between rounded-md shadow-lg py-3 px-4 w-full items-center'>
+                    <div className='w-1/2'>
+                      <p className='text-lg font-bold'>{course.course_title}</p>
+                      <p className='truncate overflow-hidden'>{course.course_description}</p>
+                      <p className='text-xs italic mt-1'>{course.id}</p>
+                    </div>
+                    <div className='flex space-x-2 items-center'>
+                      <Link href={`/dashboard/courses/edit/${course.id}`}>
+                        <p className='border-primary text-primary hover:bg-primary hover:text-white border-2 rounded-md py-1 px-4 text-sm font-bold cursor-pointer'>Edit</p>
+                      </Link>
+                      <button 
+                        onClick={()=>{deleteCourse(course.id)}}
+                        className='border-red-600 text-red-600 hover:bg-red-600 hover:text-white border-2 rounded-md py-1 px-4 text-sm font-bold cursor-pointer'>
+                          Delete
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
+              
             </div>
           </div>
           

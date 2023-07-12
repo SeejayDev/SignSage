@@ -17,9 +17,14 @@ const poppins = localFont({
   variable: '--font-poppins'
 })
 
+const gallaudet = localFont({
+  src: "../public/fonts/GALLAUDET.ttf",
+  variable: '--font-gallaudet'
+})
+
 export default function App({ Component, pageProps }) {
   return (
-    <main className={`${aoboshiOne.variable} ${poppins.variable} font-sans`}>
+    <main className={`${aoboshiOne.variable} ${poppins.variable} ${gallaudet.variable} font-sans`}>
       <Component {...pageProps} />
     </main>
   )

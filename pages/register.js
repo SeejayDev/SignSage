@@ -2,21 +2,30 @@ import Header from "@components/Header";
 import { firebase_auth, firebase_db } from "@firebase/config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore"; 
+import { useRouter } from "next/router";
 import React, { useState } from 'react'
 import { CheckmarkBox } from "src/icons/CheckmarkBox";
+import Loading from "src/icons/Loading";
 import RegularContainer from "src/layouts/RegularContainer";
 
 const register = () => {
   const [error, setError] = useState('')
+  const [isCreating, setIsCreating] = useState(false)
+  const router = useRouter()
 
   const submitForm = async (e) => {
     e.preventDefault()
+    setIsCreating(true)
 
     // get data from form object
     const formData = new FormData(e.target)
     const payload = Object.fromEntries(formData)
 
-    const { email, password } = payload
+    const { email, password, username } = payload
+
+    if (username === "") {setError("Username is required!"); setIsCreating(false); return;}
+    if (email === "") {setError("Email is required!"); setIsCreating(false); return;}
+
     if (password.length < 6) {
       setError("Password must be at least 6 characters!")
       return
@@ -29,10 +38,10 @@ const register = () => {
     // Create the new account
     createUserWithEmailAndPassword(firebase_auth, email, password)
     .then((credentials) => {
-      console.log(credentials)
+      //console.log(credentials)
       const newUser = {
         'role': 'student',
-        'username': payload.username
+        'username': username
       }
 
       setDoc(doc(firebase_db, "users", credentials.user.uid), newUser)
@@ -40,8 +49,18 @@ const register = () => {
         console.log(error)
       })
     }).catch((error) => {
-      console.log(error)
+      let errorCode = error.code
+      switch(errorCode) {
+        case "auth/email-already-in-use":
+          setError("This email has already been registered with an account. Login or use a different email.");
+          break;
+        default:
+          setError("Something went wrong.")
+      }
     })
+
+    setIsCreating(false)
+    router.push("/dashboard")
   }
 
   return (
@@ -75,7 +94,6 @@ const register = () => {
           </div>
 
           <div className='w-2/5'>
-            <p>{error}</p>
             <form onSubmit={submitForm}>
               <div className="flex flex-col space-y-4">
                 <input type="text" className="border-2 rounded-md p-2" placeholder="Username" name="username" />
@@ -86,7 +104,11 @@ const register = () => {
 
                 <input type="password" className="border-2 rounded-md p-2" placeholder="Confirm Password" name="confirm-password"/>
 
-                <button type="submit" className="bg-primary text-white rounded-md py-2 font-bold">Submit</button>
+                <button type="submit" className="bg-primary text-white rounded-md py-2 font-bold">
+                  {isCreating ? <Loading className="w-6 h-6 animate-spin" /> : <p>Submit</p>}
+                </button>
+
+                <p className="font-medium text-red-600">{error}</p>
               </div>
             </form>
           </div>

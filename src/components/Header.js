@@ -16,6 +16,7 @@ const Header = () => {
       <div className='flex items-center space-x-6 font-medium'>
         {/* Common Links */}
         <Link href="/">Home</Link>
+        <Link href="/courses">Courses</Link>
 
         {user ? (
           <>
@@ -28,17 +29,18 @@ const Header = () => {
             </button>
           </>
         ) : (
-          <button onClick={()=>doLogin("seejaydev@gmail.com", "GitGudT@k3D3gr33")}>
-            Login
-          </button>
+          <>
+            <button onClick={()=>doLogin("seejaydev@gmail.com", "GitGudT@k3D3gr33")}>
+              DoLogin
+            </button>
+
+            <Link href="/login">
+              <button className='bg-primary rounded-md px-4 py-2 text-white font-bold tracking-wide'>Login</button>
+            </Link>
+          </>
         )}
        
-       {authLoading &&
-       <Loading className="animate-spin" /> }
-
-        <Link href="/register">
-          <button className='bg-primary rounded-md px-4 py-2 text-white font-bold tracking-wide'>Register</button>
-        </Link>
+       {authLoading && <Loading className="animate-spin" /> }
       </div>
     </div>
   )

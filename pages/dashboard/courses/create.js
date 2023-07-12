@@ -1,15 +1,20 @@
 import Header from '@components/Header'
 import { firebase_db } from '@firebase/config'
-import { collection, getDocs, orderBy, query } from 'firebase/firestore'
+import { addDoc, collection, getDocs, orderBy, query } from 'firebase/firestore'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import Loading from 'src/icons/Loading'
 import { SearchIcon } from 'src/icons/SearchIcon'
 import RegularContainer from 'src/layouts/RegularContainer'
 
-const createCourse = () => {
+const create = () => {
   const [fetchedLessonList, setFetchedLessonList] = useState([])
   const [lessonList, setLessonList] = useState([])
   const [courseLessonList, setCourseLessonList] = useState([])
+  const [errorMessage, setErrorMessage] = useState("")
+  const [isCreating, setIsCreating] = useState(false)
+  const router = useRouter()
 
   const fetchLessons = async () => {
     const querySnapshot = await getDocs(query(collection(firebase_db, 'lessons'), orderBy('lesson_title')));
@@ -57,6 +62,33 @@ const createCourse = () => {
     }
   }
 
+  const createCourse = async (e) => {
+    e.preventDefault()
+
+    setErrorMessage("")
+    setIsCreating(true)
+
+    const formData = new FormData(e.target)
+    const payload = Object.fromEntries(formData)
+    const { title, description } = payload
+
+    // validate fields
+    if (title === "") {setErrorMessage("Course title is required!"); setIsCreating(false); return;}
+    if (description === "") {setErrorMessage("Course description is required!"); setIsCreating(false); return}
+    if (courseLessonList.length < 1) {setErrorMessage("Select at least 1 lesson!"); setIsCreating(false); return}
+
+    var courseLessonIdList = courseLessonList.map((lesson) => lesson.id)
+
+    const newCourse = {
+      course_title: title,
+      course_description: description,
+      course_lesson_id_list: courseLessonIdList
+    }
+
+    await addDoc(collection(firebase_db, "courses"), newCourse)
+    router.push("/dashboard")
+  }
+
   useEffect(() => {
     fetchLessons()
   }, [])
@@ -72,27 +104,34 @@ const createCourse = () => {
             <p className=''>course</p>
           </div>
 
-          <div>
-            <button className='px-4 py-2 bg-primary text-white rounded-md font-bold hover:shadow-lg hover:shadow-primary/30 transition-shadow'>Save Changes</button>
+          <div className='flex items-center space-x-2'>
+            <p className='text-red-600 font-medium'>{errorMessage}</p>
+            <label htmlFor='submit-form' className='px-4 py-2 bg-primary text-white rounded-md font-bold hover:shadow-lg hover:shadow-primary/30 transition-shadow'>
+              {isCreating ? <Loading className="w-6 h-6 animate-spin" /> : <p>Save Changes</p>}
+            </label>
           </div>
         </div>
 
         <div className='mt-8'>
-          <input 
-            type='text' 
-            name='title' 
-            className='rounded-md text-3xl w-full font-bold p-1' 
-            placeholder='Course Title' 
-          />
-          
-          <textarea 
-            type='text' 
-            name='description' 
-            className='rounded-md w-full mt-1 p-1 resize-none' 
-            placeholder='Course Description' 
-            rows={1} 
-            onChange={(e)=>updateHeight(e)} 
-          />
+          <form onSubmit={createCourse}>
+            <input 
+              type='text' 
+              name='title' 
+              className='rounded-md text-3xl w-full font-bold p-1' 
+              placeholder='Course Title' 
+            />
+            
+            <textarea 
+              type='text' 
+              name='description' 
+              className='rounded-md w-full mt-1 p-1 resize-none' 
+              placeholder='Course Description' 
+              rows={1} 
+              onChange={(e)=>updateHeight(e)} 
+            />
+
+            <input type='submit' className='hidden' id='submit-form' />
+          </form>
         </div>
 
         <div className='flex mt-4 divide-x-8 divide-primary flex-1 pb-8'>
@@ -164,4 +203,4 @@ const createCourse = () => {
   )
 }
 
-export default createCourse
+export default create
