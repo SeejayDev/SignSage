@@ -155,7 +155,7 @@ const editLesson = () => {
                 name='lesson_description' 
                 className='rounded-md w-full mt-1 p-1 resize-none' 
                 placeholder='Lesson Description' 
-                rows={1}
+                rows={lesson.lesson_description?.split(/\r\n|\r|\n/).length}
                 value={lesson.lesson_description}
                 onChange={updateLessonState} />
 
@@ -166,7 +166,7 @@ const editLesson = () => {
                   name='lesson_instructions' 
                   className='rounded-md w-full p-1 resize-none' 
                   placeholder='Content' 
-                  rows={1} 
+                  rows={lesson.lesson_instructions?.split(/\r\n|\r|\n/).length} 
                   value={lesson.lesson_instructions}
                   onChange={(e)=>{
                     updateHeight(e)

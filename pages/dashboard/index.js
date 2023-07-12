@@ -9,6 +9,7 @@ import { Plus } from 'src/icons/Plus'
 import RegularContainer from 'src/layouts/RegularContainer'
 
 const index = () => {
+  const [fetchedLessonList, setFetchedLessonList] = useState([])
   const [lessonList, setLessonList] = useState(null)
 
   const fetchLessons = async () => {
@@ -19,6 +20,7 @@ const index = () => {
       tempList.push(lesson)
     })
     //console.log(tempList)
+    setFetchedLessonList(tempList)
     setLessonList(tempList)
   }
 
@@ -34,6 +36,20 @@ const index = () => {
       await deleteDoc(doc(firebase_db, 'lessons', id))
       fetchLessons()
     }
+  }
+
+  const filterLessons = (value) => {
+    var delayLessonSearch;
+    clearTimeout(delayLessonSearch)
+    delayLessonSearch = setTimeout(() => {
+      let query = value.toUpperCase()
+      if (value === "") {
+        setLessonList(fetchedLessonList)
+      } else {
+        let filteredLessons = fetchedLessonList.filter((lesson) => lesson.lesson_title.toUpperCase().indexOf(query) >= 0)
+        setLessonList(filteredLessons)
+      }
+    }, 200)
   }
   
   useEffect(()=>{
@@ -51,8 +67,8 @@ const index = () => {
           <p className='font-bold rounded-full px-4 py-0.5 bg-purple-600 text-white text-sm'>Teacher</p>
         </div>
 
-        <div className='mt-8 flex space-x-8'>
-          <div className='w-1/2'>
+        <div className='mt-8 flex'>
+          <div className='w-1/2 pr-4'>
             <div className='flex items-center justify-between'>
               <p className='text-xl font-bold'>Manage Courses</p>
               <Link href="/dashboard/courses/create">
@@ -64,7 +80,7 @@ const index = () => {
             </div>
           </div>
           
-          <div className='w-1/2'>
+          <div className='w-1/2 pl-4'>
             <div className='flex items-center justify-between'>
               <p className='text-xl font-bold'>Manage Lessons</p>
               <Link href="/dashboard/lessons/create">
@@ -73,6 +89,10 @@ const index = () => {
                   <Plus className="w-5 h-5" />
                 </div>
               </Link>
+            </div>
+
+            <div className='mt-4'>
+              <input type='text' onChange={(e)=>filterLessons(e.target.value)} placeholder='Search for lesson' className='rounded-md p-2 border-2 w-full' />
             </div>
 
             <div className='space-y-2 mt-4'>

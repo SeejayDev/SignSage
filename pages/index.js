@@ -2,6 +2,9 @@ import Header from "@components/Header";
 import Image from "next/image";
 import RegularContainer from "src/layouts/RegularContainer";
 import heroImage from "../public/images/hero-img.jpg"
+import nextLogo from "../public/images/nextjs.png"
+import tailwindLogo from "../public/images/tailwindcss.png"
+import tensorflowLogo from "../public/images/tensorflowjs.png"
 import { RightArrow } from "src/icons/RightArrow";
 
 
@@ -35,8 +38,13 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-12">
-            <p className="text-center text-2xl font-bold ">Developed with modern frameworks and libraries</p>
+          <div className="mt-16">
+            <p className="text-center text-2xl font-medium ">Developed with <span className="p-2 bg-primary text-white rounded-md">modern</span> frameworks and libraries</p>
+            <div className="flex items-center space-x-12 justify-center mt-8">
+              <Image src={tailwindLogo} className="h-8 w-auto" />
+              <Image src={nextLogo} className="h-14 w-auto" />
+              <Image src={tensorflowLogo} className="h-12 w-auto" />
+            </div>
           </div>
         </RegularContainer>
       </div>

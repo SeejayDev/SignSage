@@ -3,9 +3,11 @@ import { firebase_db } from '@firebase/config'
 import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+import { SearchIcon } from 'src/icons/SearchIcon'
 import RegularContainer from 'src/layouts/RegularContainer'
 
 const createCourse = () => {
+  const [fetchedLessonList, setFetchedLessonList] = useState([])
   const [lessonList, setLessonList] = useState([])
   const [courseLessonList, setCourseLessonList] = useState([])
 
@@ -16,16 +18,43 @@ const createCourse = () => {
       var lesson = {...doc.data(), id: doc.id}
       tempList.push(lesson)
     })
-    //console.log(tempList)
+
+    setFetchedLessonList(tempList)
     setLessonList(tempList)
   }
 
-  const addLessonToCourse = () => {
-
+  const filterLessons = (value) => {
+    var delayLessonSearch;
+    clearTimeout(delayLessonSearch)
+    delayLessonSearch = setTimeout(() => {
+      let query = value.toUpperCase()
+      if (value === "") {
+        setLessonList(fetchedLessonList)
+      } else {
+        let filteredLessons = fetchedLessonList.filter((lesson) => lesson.lesson_title.toUpperCase().indexOf(query) >= 0)
+        setLessonList(filteredLessons)
+      }
+    }, 200)
   }
 
-  const removeLessonFromCourse = () => {
+  const addLessonToCourse = (lessonToAdd) => {
+    setCourseLessonList((prev) => [...prev, lessonToAdd])
+  }
+
+  const removeLessonFromCourse = (lessonToRemove) => {
+    let indexOfLesson = courseLessonList.indexOf(lessonToRemove)
     
+    let tempArr = [...courseLessonList]
+    tempArr.splice(indexOfLesson, 1)
+    setCourseLessonList(tempArr)
+  }
+
+  const updateHeight = (e) => {
+    const textarea = e.target
+    if (textarea.clientHeight < textarea.scrollHeight) {
+      textarea.style.height = "0px"
+      textarea.style.height = textarea.scrollHeight + "px"
+    }
   }
 
   useEffect(() => {
@@ -48,13 +77,31 @@ const createCourse = () => {
           </div>
         </div>
 
-        <div className='flex mt-8 divide-x-8 divide-primary flex-1 pb-8'>
+        <div className='mt-8'>
+          <input 
+            type='text' 
+            name='title' 
+            className='rounded-md text-3xl w-full font-bold p-1' 
+            placeholder='Course Title' 
+          />
+          
+          <textarea 
+            type='text' 
+            name='description' 
+            className='rounded-md w-full mt-1 p-1 resize-none' 
+            placeholder='Course Description' 
+            rows={1} 
+            onChange={(e)=>updateHeight(e)} 
+          />
+        </div>
+
+        <div className='flex mt-4 divide-x-8 divide-primary flex-1 pb-8'>
           <div className='w-1/2 pr-4'>
             <p className='text-xl font-bold'>Lessons in this course:</p>
 
-            <div className='space-y-2'>
+            <div className='space-y-2 mt-5'>
               {courseLessonList.length === 0 ? <>
-                <p className='ont-medium py-8'>No lessons added to course.</p>
+                <p className='ont-medium mt-4'>No lessons added to course.</p>
               </> : <>
                 {courseLessonList.map((lesson) => {
                   return (
@@ -66,7 +113,7 @@ const createCourse = () => {
                       </div>
                       <div className='flex space-x-2 items-center'>
                         <button 
-                          onClick={()=>{removeLessonFromCourse(lesson.id)}}
+                          onClick={()=>{removeLessonFromCourse(lesson)}}
                           className='border-red-600 text-red-600 hover:bg-red-600 hover:text-white border-2 rounded-md py-1 px-4 text-sm font-bold cursor-pointer'>
                             Remove
                         </button>
@@ -79,26 +126,35 @@ const createCourse = () => {
           </div>
 
           <div className='w-1/2 pl-4'>
-            <p className='text-xl font-bold pl-4'>All lessons:</p>
+            <div className='flex items-center justify-between'>
+              <p className='text-xl font-bold mr-8'>All lessons:</p>
 
-            <div className='space-y-2'>
-              {lessonList?.map((lesson)=>{
-                  return (
-                    <div key={lesson.id} className='flex justify-between rounded-md shadow-lg py-3 px-4 w-full items-center'>
-                      <div className='w-1/2'>
-                        <p className='text-lg font-bold'>{lesson.lesson_title}</p>
-                        <p className='truncate overflow-hidden'>{lesson.lesson_description}</p>
-                        <p className='text-xs italic mt-1'>{lesson.id}</p>
+              <div className='flex-1 border-b-2 flex items-center'>
+                <input type='text' onChange={(e)=>filterLessons(e.target.value)} placeholder='Search for lesson' className='w-full py-1 focus:ring-0 focus:outline-none' />
+                <SearchIcon className="w-6 h-6" />
+              </div>
+            </div>
+
+            <div className='space-y-2 mt-4'>
+              {lessonList?.map((lesson) => {
+                  if (courseLessonList.indexOf(lesson) < 0) {
+                    return (
+                      <div key={lesson.id} className='flex justify-between rounded-md shadow-lg py-3 px-4 w-full items-center'>
+                        <div className='w-1/2'>
+                          <p className='text-lg font-bold'>{lesson.lesson_title}</p>
+                          <p className='truncate overflow-hidden'>{lesson.lesson_description}</p>
+                          <p className='text-xs italic mt-1'>{lesson.id}</p>
+                        </div>
+                        <div className='flex space-x-2 items-center'>
+                          <button 
+                            onClick={()=>{addLessonToCourse(lesson)}}
+                            className='border-primary text-primary hover:bg-primary hover:text-white border-2 rounded-md py-1 px-4 text-sm font-bold cursor-pointer'>
+                              Add
+                          </button>
+                        </div>
                       </div>
-                      <div className='flex space-x-2 items-center'>
-                        <button 
-                          onClick={()=>{addLessonToCourse(lesson.id)}}
-                          className='border-primary text-primary hover:bg-primary hover:text-white border-2 rounded-md py-1 px-4 text-sm font-bold cursor-pointer'>
-                            Add
-                        </button>
-                      </div>
-                    </div>
-                  )
+                    )
+                  }
                 })}
             </div>
           </div>
