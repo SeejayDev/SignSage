@@ -2,10 +2,12 @@ import Header from "@components/Header";
 import { firebase_auth, firebase_db } from "@firebase/config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore"; 
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from 'react'
 import { CheckmarkBox } from "src/icons/CheckmarkBox";
 import Loading from "src/icons/Loading";
+import { RightArrow } from "src/icons/RightArrow";
 import RegularContainer from "src/layouts/RegularContainer";
 
 const register = () => {
@@ -42,7 +44,7 @@ const register = () => {
     .then((credentials) => {
       //console.log(credentials)
       const newUser = {
-        'role': 'student',
+        'role': 'teacher',
         'username': username
       }
 
@@ -54,7 +56,7 @@ const register = () => {
       let errorCode = error.code
       switch(errorCode) {
         case "auth/email-already-in-use":
-          setError("This email has already been registered with an account. Login or use a different email.");
+          setError("This email has already been registered with an account. Use a different email.");
           break;
         default:
           setError("Something went wrong.")
@@ -70,29 +72,16 @@ const register = () => {
       <Header />
 
       <RegularContainer>
-        <p className="mt-8 font-bold text-4xl text-primary">Create a SignSage account</p>
-
         <div className='flex justify-center mt-8 space-x-4'>
           <div className='w-3/5'>
-            <p className="text-2xl font-medium">You are one step closer to learning sign language!</p>
+            <p className="font-bold text-3xl text-primary">Register new teacher account</p>
 
-            <div className="flex flex-col mt-8 space-y-2">
-              <p className="text-lg">Having an account lets you:</p>
-              <div className="flex items-center">
-                <CheckmarkBox className="text-primary w-6 h-6 mr-2" />
-                <p>Track your learning progress</p>
+            <Link href="/dashboard">
+              <div className='flex items-center mt-3 text-sm text-primary hover:underline font-medium'>
+                <RightArrow className="transform rotate-180 h-5 w-5" />
+                <p>Back to Dashboard</p>
               </div>
-              <div className="flex items-center">
-                <CheckmarkBox className="text-primary w-6 h-6 mr-2" />
-                <p>Bookmark courses to focus on</p>
-              </div>
-              <div className="flex items-center">
-                <CheckmarkBox className="text-primary w-6 h-6 mr-2" />
-                <p>Save lessons to complete later</p>
-              </div>
-            </div>
-
-            <p className="mt-8 italic text-sm">All your personal information is stored securely on our servers and will not be shared with third parties without your prior consent.</p>
+            </Link>
           </div>
 
           <div className='w-2/5'>

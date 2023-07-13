@@ -1,19 +1,22 @@
 import Header from '@components/Header'
 import { firebase_auth } from '@firebase/config'
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { browserSessionPersistence, setPersistence, signInWithEmailAndPassword } from 'firebase/auth'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth'
+import Loading from 'src/icons/Loading'
 import RegularContainer from 'src/layouts/RegularContainer'
 
 const login = () => {
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const submitForm = async (e) => {
     e.preventDefault()
     setErrorMessage("")
+    setIsLoading(true)
 
     // get data from form object
     const formData = new FormData(e.target)
@@ -21,16 +24,19 @@ const login = () => {
 
     const { email, password } = payload
 
-    signInWithEmailAndPassword(firebase_auth, email, password)
-      .then((userCredential) => {
-        //let user = userCredential.user;
-        router.push("/dashboard")
-      })
-      .catch((error) => {
-        //console.log(error.code)
-        //let errorCode = error.code 
-        setErrorMessage("Invalid email or password.")
-      })
+    setPersistence(firebase_auth, browserSessionPersistence).then(() => {
+      signInWithEmailAndPassword(firebase_auth, email, password)
+        .then((userCredential) => {
+          //let user = userCredential.user;
+          router.push("/dashboard")
+        })
+        .catch((error) => {
+          //console.log(error.code)
+          //let errorCode = error.code 
+          setErrorMessage("Invalid email or password.")
+        })
+    })
+    setIsLoading(false)
   }
 
   return (
@@ -59,15 +65,14 @@ const login = () => {
 
                 <input type="password" className="border-2 rounded-md p-2" placeholder="Password" name="password" />
 
-                <button type="submit" className="bg-primary text-white rounded-md py-2 font-bold">Login</button>
+                <button type="submit" className="bg-primary text-white rounded-md py-2 font-bold">
+                  {isLoading ? <Loading className="w-6 h-6 animate-spin" /> : <p>Login</p>}
+                </button>
 
                 {errorMessage !== "" && <p className='font-medium text-red-600'>{errorMessage}</p> }
               </div>
             </form>
           </div>
-        </div>
-
-        <div className='flex flex-col items-center mx-auto w-96 bg-primary rounded-md shadow-lg mt-8'>
         </div>
       </RegularContainer>
     </>

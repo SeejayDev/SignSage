@@ -115,7 +115,7 @@ const create = () => {
               <div className='w-full p-1 mt-4'>
                 <p className='font-bold text-xl'>Images: </p>
                 <input type='file' accept='image/*' className='hidden' id='images' multiple onChange={(e)=>handleUploadImage(e)} />
-                <div className='grid grid-cols-4 mt-4 gap-4'>
+                <div className='grid grid-cols-3 mt-4 gap-4'>
                   {images.map((img, idx)=>(
                     <div key={idx} className='w-full aspect-square relative border rounded-md overflow-hidden cursor-pointer' onClick={()=>removeImage(idx)}>
                       <div className='absolute w-full h-full bg-gray-800 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center'>

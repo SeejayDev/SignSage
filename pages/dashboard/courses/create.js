@@ -1,7 +1,6 @@
 import Header from '@components/Header'
 import { firebase_db } from '@firebase/config'
 import { addDoc, collection, getDocs, orderBy, query } from 'firebase/firestore'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Loading from 'src/icons/Loading'
