@@ -15,8 +15,8 @@ const login = () => {
 
   const submitForm = async (e) => {
     e.preventDefault()
-    setErrorMessage("")
     setIsLoading(true)
+    setErrorMessage("")
 
     // get data from form object
     const formData = new FormData(e.target)
@@ -36,6 +36,7 @@ const login = () => {
           setErrorMessage("Invalid email or password.")
         })
     })
+
     setIsLoading(false)
   }
 

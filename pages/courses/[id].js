@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth'
 import { EmptyHeart } from 'src/icons/EmptyHeart'
 import { Eye } from 'src/icons/Eye'
+import { FilledHeart } from 'src/icons/FilledHeart'
 import { RightArrow } from 'src/icons/RightArrow'
 import { UpwardsArrow } from 'src/icons/UpwardsArrow'
 import RegularContainer from 'src/layouts/RegularContainer'
@@ -48,7 +49,7 @@ const viewCourse = () => {
     // prompt hint if user is not signed in or a student
     if (!user) {
       setShowLoginHint(true)
-      setTimeout(()=> setShowLoginHint(false), 3000)
+      setTimeout(()=> setShowLoginHint(false), 4000)
     } else {
       let existingSavedLessons = []
       if (userProfile.saved_lessons) {
@@ -62,7 +63,7 @@ const viewCourse = () => {
     }
   }
 
-  const unsaveCourse = async (id) => {
+  const unsaveLesson = async (id) => {
     let savedCourses = [...userProfile.saved_lessons]
     let idxOfCourseToRemove = savedCourses.indexOf(id)
     savedCourses.splice(idxOfCourseToRemove, 1)
@@ -86,10 +87,9 @@ const viewCourse = () => {
       <Header />
 
       <div className='bg-primary w-full py-8'>
-        <RegularContainer>
-          <div className='flex items-center w-full justify-between space-x-8 relative'>
+        <RegularContainer className="relative">
           {showLoginHint &&
-              <div className='absolute right-0 -top-3 z-20 transform -translate-y-8 flex flex-col items-end px-4 animate-bounce'>
+              <div className='absolute right-0 -top-3 z-20 transform -translate-y-8 flex flex-col items-end pr-5 animate-bounce'>
                 <UpwardsArrow className="w-8 h-8 text-white" />
                 
                 <div className='bg-white rounded-md text-center p-2'>
@@ -97,6 +97,7 @@ const viewCourse = () => {
                 </div>
               </div>
             }
+          <div className='flex items-center w-full justify-between space-x-8 relative'>
           {course ?
             <div className='text-white font-medium'>
               <Link href="/courses">
@@ -134,10 +135,20 @@ const viewCourse = () => {
                       <p className='font-bold'>View</p>
                   </Link>
 
-                  <div className='w-1/2 flex items-center justify-center text-red-600 space-x-2 py-3 cursor-pointer' onClick={() => saveLesson(course.id)}>
-                    <EmptyHeart className="w-6 h-6" />
-                    <p className='font-bold'>Like</p>
-                  </div>
+                  {userProfile?.saved_lessons?.indexOf(lesson.id) >= 0 ?
+                    <div 
+                      className='w-1/2 flex items-center justify-center text-red-600 space-x-2 py-3 cursor-pointer' 
+                      onClick={() => unsaveLesson(lesson.id)}>
+                      <FilledHeart className="w-6 h-6" />
+                      <p className='font-bold'>Liked</p>
+                    </div> :
+                    <div 
+                      className='w-1/2 flex items-center justify-center text-red-600 space-x-2 py-3 cursor-pointer' 
+                      onClick={() => saveLesson(lesson.id)}>
+                      <EmptyHeart className="w-6 h-6" />
+                      <p className='font-bold'>Like</p>
+                    </div>
+                  }
                 </div>
               </div>
             )

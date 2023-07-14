@@ -99,7 +99,7 @@ const courses = () => {
               <div key={course.id} className='bg-white rounded-lg shadow-lg w-full h-full overflow-hidden hover:shadow-md hover:shadow-purple-600 transition-shadow relative'>
                 {userProfile?.saved_courses?.indexOf(course.id) >= 0 ?
                   <button className='absolute right-3 top-3 z-20 cursor-pointer' onClick={() => unsaveCourse(course.id)}>
-                    <FilledHeart className="w-8 h-8 text-red-700" />
+                    <FilledHeart className="w-8 h-8 text-red-400" />
                   </button>
                   :
                   <button className='absolute right-3 top-3 z-20 cursor-pointer' onClick={() => saveCourse(course.id)}>
