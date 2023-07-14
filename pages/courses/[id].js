@@ -1,16 +1,22 @@
 import Header from '@components/Header'
 import { firebase_db } from '@firebase/config'
-import { collection, doc, getDoc, getDocs, orderBy, query } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import useFirebaseAuth from 'src/hooks/useFirebaseAuth'
+import { EmptyHeart } from 'src/icons/EmptyHeart'
+import { Eye } from 'src/icons/Eye'
 import { RightArrow } from 'src/icons/RightArrow'
+import { UpwardsArrow } from 'src/icons/UpwardsArrow'
 import RegularContainer from 'src/layouts/RegularContainer'
 
 const viewCourse = () => {
   const [course, setCourse] = useState(null)
+  const [showLoginHint, setShowLoginHint] = useState(false)
   const [lessonList, setLessonList] = useState([])
   const router = useRouter()
+  const {user, userProfile, refreshUserProfile} = useFirebaseAuth() 
   const { id } = router.query
 
   const fetchCourseDetails = async (id) => {
@@ -38,6 +44,36 @@ const viewCourse = () => {
     }
   }
 
+  const saveLesson = async (id) => {
+    // prompt hint if user is not signed in or a student
+    if (!user) {
+      setShowLoginHint(true)
+      setTimeout(()=> setShowLoginHint(false), 3000)
+    } else {
+      let existingSavedLessons = []
+      if (userProfile.saved_lessons) {
+        existingSavedLessons = [...userProfile.saved_lessons]
+      }
+      updateDoc(doc(firebase_db, "users", user.uid), {
+        saved_lessons: [...existingSavedLessons, id]
+      }).then(() => {
+        refreshUserProfile()
+      })
+    }
+  }
+
+  const unsaveCourse = async (id) => {
+    let savedCourses = [...userProfile.saved_lessons]
+    let idxOfCourseToRemove = savedCourses.indexOf(id)
+    savedCourses.splice(idxOfCourseToRemove, 1)
+
+    updateDoc(doc(firebase_db, "users", user.uid), {
+      saved_lessons: savedCourses
+    }).then(() => {
+      refreshUserProfile()
+    })
+  }
+
   // when the component first renders and the ID is loaded, fetch the course and its list of lessons
   useEffect(()=>{
     if (id) {
@@ -51,7 +87,16 @@ const viewCourse = () => {
 
       <div className='bg-primary w-full py-8'>
         <RegularContainer>
-          <div className='flex items-center w-full justify-between space-x-8'>
+          <div className='flex items-center w-full justify-between space-x-8 relative'>
+          {showLoginHint &&
+              <div className='absolute right-0 -top-3 z-20 transform -translate-y-8 flex flex-col items-end px-4 animate-bounce'>
+                <UpwardsArrow className="w-8 h-8 text-white" />
+                
+                <div className='bg-white rounded-md text-center p-2'>
+                  <p className='font-medium text-sm'>Create a student account to save lessons</p>
+                </div>
+              </div>
+            }
           {course ?
             <div className='text-white font-medium'>
               <Link href="/courses">
@@ -77,16 +122,24 @@ const viewCourse = () => {
         <div className='grid grid-cols-3 mt-8 gap-8'>
           {lessonList.map((lesson) => {
             return (
-              <Link key={lesson.id} href={`/lessons/${lesson.id}`}>
-                <div className='bg-white rounded-lg shadow-lg w-full h-full overflow-hidden hover:shadow-md hover:shadow-primary transition-shadow'>
-                  <div className='w-full aspect-[3/1] flex flex-col items-center justify-center text-center p-8 relative border-4 border-black rounded-lg'>
-                    <p className='font-bold text-2xl z-20 relative '>{lesson.lesson_title}</p>
-                  </div>
-                  <div className='text-center p-4'>
-                    <p className='line-clamp-3 font-medium'>{lesson.lesson_description}</p>
+              <div key={lesson.id} className='bg-white rounded-lg shadow-lg flex flex-col'>
+                <div className='p-4'> 
+                  <p className='font-bold text-xl '>{lesson.lesson_title}</p>
+                  <p className='text-sm italic line-clamp-3 mt-2'>{lesson.lesson_description}</p>
+                </div>
+                
+                <div className='flex border-t-2 mt-2 divide-x-2 flex-1 w-full' >
+                  <Link href={`/lessons/${lesson.id}`} className='w-1/2 flex items-center justify-center text-primary space-x-2 py-3'>
+                      <Eye className="w-6 h-6" />
+                      <p className='font-bold'>View</p>
+                  </Link>
+
+                  <div className='w-1/2 flex items-center justify-center text-red-600 space-x-2 py-3 cursor-pointer' onClick={() => saveLesson(course.id)}>
+                    <EmptyHeart className="w-6 h-6" />
+                    <p className='font-bold'>Like</p>
                   </div>
                 </div>
-              </Link>
+              </div>
             )
           })}
         </div>

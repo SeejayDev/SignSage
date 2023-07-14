@@ -31,6 +31,7 @@ export default function Home() {
             <div className="w-1/2">
               <div className="relative pr-6 pb-6">
                 <Image
+                  priority
                   src={heroImage}
                   alt="Image of two people doing sign language"
                   className="w-full rounded-lg relative z-20" />
@@ -50,6 +51,7 @@ export default function Home() {
               <Image src={nextLogo} className="h-14 w-auto" alt="NextJS Logo" />
               <Image src={tensorflowLogo} className="h-12 w-auto" alt="TensorFlow Logo"/>
             </div>
+            <p className="text-center font-medium mt-12">Designed for a modern learning experience</p>
         </RegularContainer>
       </div>
     </>

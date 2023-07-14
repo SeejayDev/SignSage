@@ -7,51 +7,40 @@ const useFirebaseAuth = () => {
   const [user, setUser] = useState(null)
   const [userProfile, setUserProfile] = useState(null)
 
-  const getUserProfile = async () => {
-    const docRef = doc(firebase_db, "users", user.uid);
+  const authStateChanged = async (authState) => {
+    if (!authState) {
+      // if user is not logged in, reset the value
+      setUser(null)
+      return
+    }
+
+    // if the user is logged in
+    setUser(authState)
+
+    // get user's profile
+    const docRef = doc(firebase_db, "users", authState.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       setUserProfile(docSnap.data())
     }
   }
 
-  onAuthStateChanged(firebase_auth, (currentUser) => {
-    if (currentUser) {
-      setUser(currentUser)
-    } else {
-      setUser(null)
+  const refreshUserProfile = async () => {
+    if (user) {
+      // get user's profile
+      const docRef = doc(firebase_db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setUserProfile(docSnap.data())
+      }
     }
-  })
+  }
 
   useEffect(() => {
-    if (user) {
-      getUserProfile()
-    }
-  }, [user])
+    onAuthStateChanged(firebase_auth, authStateChanged)
+  }, [])
 
-  // const authStateChanged = async (authState) => {
-  //   if (!authState) {
-  //     // if user is not logged in, reset the value
-  //     setUser(null)
-  //     return
-  //   }
-
-  //   // if the user is logged in
-  //   setUser(authState)
-
-  //   // get user's profile
-    // const docRef = doc(firebase_db, "users", authState.uid);
-    // const docSnap = await getDoc(docRef);
-    // if (docSnap.exists()) {
-    //   setUserProfile(docSnap.data())
-    // }
-  // }
-
-  // useEffect(() => {
-  //   onAuthStateChanged(firebase_auth, authStateChanged)
-  // }, [])
-
-  return {user, userProfile}
+  return {user, userProfile, refreshUserProfile}
 }
 
 export default useFirebaseAuth
