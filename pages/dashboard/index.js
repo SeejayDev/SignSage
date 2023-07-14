@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth'
 import RegularContainer from 'src/layouts/RegularContainer'
+import DashboardStudent from 'src/page-components/DashboardStudent'
 import DashboardTeacher from 'src/page-components/DashboardTeacher'
 
 const index = () => {
@@ -33,7 +34,7 @@ const index = () => {
         </div>
 
         <div className='mt-12'>
-          {userProfile?.role === "teacher" ? <DashboardTeacher />: <></>}
+          {userProfile?.role === "teacher" ? <DashboardTeacher />: <DashboardStudent />}
         </div>
       </RegularContainer>
       }

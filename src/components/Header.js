@@ -32,7 +32,7 @@ const Header = () => {
               <Link href="/dashboard">
                 <button className=''>Dashboard</button>
               </Link>
-              <button onClick={doLogout}>
+              <button onClick={doLogout} className='text-primary'>
                 Logout
               </button>
             </>

@@ -51,7 +51,7 @@ export default function Home() {
               <Image src={nextLogo} className="h-14 w-auto" alt="NextJS Logo" />
               <Image src={tensorflowLogo} className="h-12 w-auto" alt="TensorFlow Logo"/>
             </div>
-            <p className="text-center font-medium mt-4">Designed for a modern learning experience</p>
+            <p className="text-center font-medium mt-4 text-primary">Designed for a modern learning experience</p>
         </RegularContainer>
       </div>
     </>
