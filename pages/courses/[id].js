@@ -64,12 +64,12 @@ const viewCourse = () => {
   }
 
   const unsaveLesson = async (id) => {
-    let savedCourses = [...userProfile.saved_lessons]
-    let idxOfCourseToRemove = savedCourses.indexOf(id)
-    savedCourses.splice(idxOfCourseToRemove, 1)
+    let savedLessons = [...userProfile.saved_lessons]
+    let idxOfCourseToRemove = savedLessons.indexOf(id)
+    savedLessons.splice(idxOfCourseToRemove, 1)
 
     updateDoc(doc(firebase_db, "users", user.uid), {
-      saved_lessons: savedCourses
+      saved_lessons: savedLessons
     }).then(() => {
       refreshUserProfile()
     })
