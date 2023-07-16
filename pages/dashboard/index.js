@@ -22,15 +22,15 @@ const index = () => {
         </div>
 
         <div className='mt-4 text-sm grid grid-cols-4 text-center gap-4'>
-          <Link href="/dashboard/profile">
-            <p className='border-2 border-purple-600 hover:bg-purple-600 hover:text-white py-1 rounded-md text-purple-600 font-medium transition-colors'>Manage Profile</p>
-          </Link>
-          
           {userProfile?.role === "teacher" &&
             <Link href="/dashboard/register">
               <p className='border-2 border-purple-600 hover:bg-purple-600 hover:text-white py-1 rounded-md text-purple-600 font-medium transition-colors'>Register New Teacher Account</p>
             </Link>
           }
+
+          <Link href="/dashboard/profile">
+            <p className='border-2 border-purple-600 hover:bg-purple-600 hover:text-white py-1 rounded-md text-purple-600 font-medium transition-colors'>Manage Profile</p>
+          </Link>
         </div>
 
         <div className='mt-12'>

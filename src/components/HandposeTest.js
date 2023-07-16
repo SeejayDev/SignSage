@@ -1,13 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Webcam from 'react-webcam'
-import { Camera } from 'src/icons/Camera'
-import { Plus } from 'src/icons/Plus';
 import HandposeCamera from './HandposeCamera';
 import { curlOptions, directionOptions, fingerList } from 'src/posedetection/FingerposeValues';
 import { Notification } from 'src/icons/Notification';
 
 const HandposeTest = (props) => {
-  const { curls = [0,0,0,0,0], directions = [0,0,0,0,0], sways = [0,0,0,0,0] } = props
+  const { curls = [0,0,0,0,0], directions = [0,0,0,0,0], sways = [0,0,0,0,0], setStepsMatched = ()=>{} } = props
   const [cameraActive, setCameraActive] = useState(false)
   const [detectedCurls, setDetectedCurls] = useState([])
   const [instruction, setInstruction] = useState("")
@@ -49,22 +46,40 @@ const HandposeTest = (props) => {
   useEffect(()=> {
     let testResults = []
     let clue = ""
+    let completedSteps = 0
     for (let i = 0; i < 5; i++) {
-      if (checkDirectionWithSway(directions[i], detectedDirections[i]) && detectedCurls[i] === curls[i]) {
+      let directionMatch = false
+      if (sways[i] === 1) {
+        directionMatch = checkDirectionWithSway(directions[i], detectedDirections[i])
+      } else {
+        directionMatch = directions[i] === detectedDirections[i]
+      }
+
+      let curlMatch = detectedCurls[i] === curls[i]
+
+      if (directionMatch && curlMatch) {
         testResults[i] = true
+        completedSteps += 2
       } else {
         testResults[i] = false
 
+        if (directionMatch) {completedSteps += 1}
+        if (curlMatch) {completedSteps += 1}
+        
         if (clue === "" && cameraActive) {
           if (detectedCurls[i] !== curls[i]) {
             clue = `The ${fingerList[i]} should be ${curlOptions[curls[i]]}`
           } else if (detectedDirections[i] !== directions[i]) {
-            clue = `The ${fingerList[i]} should point ${directionOptions[directions[i]].orientation} 
-              ${directionOptions[directions[i]].direction && `to the ${directionOptions[directions[i]].direction}`}`
+            clue = `The ${fingerList[i]} should point ${directionOptions[directions[i]].orientation}`
+
+            if (directionOptions[directions[i].direction !== null]) {
+              clue += `to the ${directionOptions[directions[i]].direction}`
+            }
           }
         }
       }
     }
+    setStepsMatched(completedSteps)
     setInstruction(clue)
     setTestResults(testResults)
   }, [detectedCurls, detectedDirections])
@@ -77,11 +92,11 @@ const HandposeTest = (props) => {
         </div>
 
         
-        <div className='relative w-72 h-72 2xl:w-96 2xl:h-96 mt-4'>
+        <div className='relative w-full aspect-square mt-4'>
           <HandposeCamera setDetectedCurls={setDetectedCurls} setDetectedDirections={setDetectedDirections} setActivated={setCameraActive} />
         </div>
 
-        <div className={`grid grid-cols-5 w-96 mx-auto gap-2 transition-all ${cameraActive ? "mt-8" : "mt-4"}`}>
+        <div className={`grid grid-cols-5 w-full mx-auto gap-2 transition-all ${cameraActive ? "mt-8" : "mt-4"}`}>
           {fingers.map((finger, idx) => (
             <div 
               key={idx} 
@@ -93,7 +108,7 @@ const HandposeTest = (props) => {
         </div>
         
         {instruction !== "" &&
-          <div className='p-2 rounded-md bg-red-400 text-white w-96 font-medium flex items-center mt-4'>
+          <div className='p-2 rounded-md bg-red-400 text-white w-full font-medium flex items-center mt-4'>
             <Notification className="w-5 h-5 mr-2" />
             <p className=''>{instruction}</p>
           </div>

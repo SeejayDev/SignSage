@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth'
+import { CheckmarkCircle } from 'src/icons/CheckmarkCircle'
 import { EmptyHeart } from 'src/icons/EmptyHeart'
 import { Eye } from 'src/icons/Eye'
 import { FilledHeart } from 'src/icons/FilledHeart'
@@ -65,8 +66,8 @@ const viewCourse = () => {
 
   const unsaveLesson = async (id) => {
     let savedLessons = [...userProfile.saved_lessons]
-    let idxOfCourseToRemove = savedLessons.indexOf(id)
-    savedLessons.splice(idxOfCourseToRemove, 1)
+    let idxOfLessonToRemove = savedLessons.indexOf(id)
+    savedLessons.splice(idxOfLessonToRemove, 1)
 
     updateDoc(doc(firebase_db, "users", user.uid), {
       saved_lessons: savedLessons
@@ -100,12 +101,12 @@ const viewCourse = () => {
           <div className='flex items-center w-full justify-between space-x-8 relative'>
           {course ?
             <div className='text-white font-medium'>
-              <Link href="/courses">
+              <button onClick={() => {router.back()}}>
                 <div className='flex items-center hover:underline text-sm'>
                   <RightArrow className="transform rotate-180 w-5 h-5" />
-                  <p>Back to courses</p>
+                  <p>Back</p>
                 </div>
-              </Link>
+              </button>
               <p className='text-4xl font-bold mt-4'>{course.course_title}</p>
               <p className='mt-2'>{course.course_description}</p>
             </div>
@@ -123,7 +124,7 @@ const viewCourse = () => {
         <div className='grid grid-cols-3 mt-8 gap-8'>
           {lessonList.map((lesson) => {
             return (
-              <div key={lesson.id} className='bg-white rounded-lg shadow-lg flex flex-col'>
+              <div key={lesson.id} className='bg-white rounded-lg shadow-lg flex flex-col relative overflow-hidden'>
                 <div className='p-4'> 
                   <p className='font-bold text-xl '>{lesson.lesson_title}</p>
                   <p className='text-sm italic line-clamp-3 mt-2'>{lesson.lesson_description}</p>
@@ -150,6 +151,12 @@ const viewCourse = () => {
                     </div>
                   }
                 </div>
+
+                {userProfile?.completed_lessons?.indexOf(lesson.id) >= 0 &&
+                  <div className='absolute top-0 right-0'>
+                    <CheckmarkCircle className="text-primary h-16 w-16 rotate-12 opacity-60" />
+                  </div>
+                }
               </div>
             )
           })}
