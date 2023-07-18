@@ -17,6 +17,7 @@ const register = () => {
 
   const submitForm = async (e) => {
     e.preventDefault()
+    setError("")
     setIsCreating(true)
 
     // get data from form object
@@ -49,8 +50,8 @@ const register = () => {
       }
 
       setDoc(doc(firebase_db, "users", credentials.user.uid), newUser).then(() => {
+        router.push("/dashboard")
         setIsCreating(false)
-        //router.push("/dashboard")
       })
       .catch((error)=> {
         console.log(error)
@@ -60,9 +61,11 @@ const register = () => {
       switch(errorCode) {
         case "auth/email-already-in-use":
           setError("This email has already been registered with an account. Use a different email.");
+          setIsCreating(false)
           break;
         default:
           setError("Something went wrong.")
+          setIsCreating(false)
       }
     })
   }
@@ -74,14 +77,33 @@ const register = () => {
       <RegularContainer>
         <div className='flex justify-center mt-8 space-x-4'>
           <div className='w-3/5'>
-            <p className="font-bold text-3xl text-primary">Register new teacher account</p>
-
             <Link href="/dashboard">
-              <div className='flex items-center mt-3 text-sm text-primary hover:underline font-medium'>
+              <div className='flex items-center text-sm text-primary hover:underline font-medium'>
                 <RightArrow className="transform rotate-180 h-5 w-5" />
                 <p>Back to Dashboard</p>
               </div>
             </Link>
+            
+            <p className="font-bold text-3xl text-primary mt-2">Register new teacher account</p>
+
+            <div className="flex flex-col mt-4 space-y-2 text-sm">
+              <p className="">Keep in mind that all teachers can:</p>
+              <div className="flex items-center">
+                <CheckmarkBox className="text-primary w-6 h-6 mr-2" />
+                <p>View all SignSage content</p>
+              </div>
+              <div className="flex items-center">
+                <CheckmarkBox className="text-primary w-6 h-6 mr-2" />
+                <p>Edit any course or lesson</p>
+              </div>
+              <div className="flex items-center">
+                <CheckmarkBox className="text-primary w-6 h-6 mr-2" />
+                <p>Create new courses and lessons</p>
+              </div>
+            </div>
+
+            <p className="font-bold text-red-600 mt-6">WARNING: CREATING A NEW ACCOUNT WILL SIGN THE CURRENT ACCOUNT OUT.</p>
+            <p className="font-bold text-red-600">LOGOUT AND LOGIN AGAIN TO RETURN TO THE CURRENT ACCOUNT.</p>
           </div>
 
           <div className='w-2/5'>

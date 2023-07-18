@@ -106,7 +106,7 @@ const create = () => {
           <div className='flex items-center space-x-2'>
             <p className='text-red-600 font-medium'>{errorMessage}</p>
             <label htmlFor='submit-form' className='px-4 py-2 bg-primary text-white rounded-md font-bold hover:shadow-lg hover:shadow-primary/30 transition-shadow'>
-              {isCreating ? <Loading className="w-6 h-6 animate-spin" /> : <p>Save Changes</p>}
+              {isCreating ? <Loading className="w-6 h-6 animate-spin" /> : <p>Create</p>}
             </label>
           </div>
         </div>

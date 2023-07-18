@@ -13,6 +13,7 @@ import Loading from 'src/icons/Loading'
 import HandposeSelect from '@components/HandposeSelect'
 import HandposeSelectSingleLine from '@components/HandposeSelectSingleLine'
 import HandposeCamera from '@components/HandposeCamera'
+import RegularContainer from 'src/layouts/RegularContainer'
 
 const create = () => {
   const [curls, setCurls] = useState([0,0,0,0,0])
@@ -94,10 +95,19 @@ const create = () => {
     <>
       <Header />
 
-      <div className='container max-w-7xl mx-auto font-poppins mt-8'>
-        <div className='flex font-bold text-4xl uppercase space-x-2 items-center'>
-          <p className="bg-primary p-2 rounded-md text-white">New</p>
-          <p className=''>lesson</p>
+      <RegularContainer className="mt-8">
+        <div className='flex items-center justify-between'>
+          <div className='flex font-bold text-4xl uppercase space-x-2 items-center'>
+            <p className="bg-primary p-2 rounded-md text-white">Create</p>
+            <p className=''>lesson</p>
+          </div>
+
+          <div className='flex items-center space-x-2'>
+            <p className='text-red-600 font-medium'>{errorMessage}</p>
+            <label htmlFor='submit-form' className='px-4 py-2 cursor-pointer bg-primary text-white rounded-md font-bold hover:shadow-lg hover:shadow-primary/30 transition-shadow' disabled={isCreating}>
+              {isCreating ? <Loading className="w-6 h-6 animate-spin" /> : <p>Create</p>}
+            </label>
+          </div>
         </div>
 
         <div className='flex w-full mt-8 space-x-8 mb-12'>
@@ -107,12 +117,12 @@ const create = () => {
 
               <textarea type='text' name='description' className='rounded-md w-full mt-1 p-1 resize-none' placeholder='Lesson Description' rows={1} onChange={(e)=>updateHeight(e)} />
 
-              <div className='w-full mt-4'>
+              <div className='w-full mt-6'>
                 <p className='font-bold p-1 text-xl'>Instructions: </p>
                 <textarea type='text' name='instructions' className='rounded-md w-full p-1 resize-none' placeholder='Content' rows={1} onChange={(e)=>updateHeight(e)} />
               </div>
              
-              <div className='w-full p-1 mt-4'>
+              <div className='w-full p-1 mt-6'>
                 <p className='font-bold text-xl'>Images: </p>
                 <input type='file' accept='image/*' className='hidden' id='images' multiple onChange={(e)=>handleUploadImage(e)} />
                 <div className='grid grid-cols-3 mt-4 gap-4'>
@@ -133,20 +143,18 @@ const create = () => {
                 </div>
               </div>
 
-              <div className='p-1 mt-4'>
-                <p className='font-bold text-xl'>Video Link:</p>
+              <div className='p-1 mt-6'>
+                <p className='font-bold text-xl'>Video Link (optional):</p>
                 <input type='text' name='video_link' className='px-4 py-1 border rounded-md mt-2 w-full' />
+                <p className='italic text-sm mt-1'>Note: For storage reasons, only YouTube embed links are currently supported by SignSage. Please upload the tutorial video to YouTube and paste the link here.</p>
               </div>
 
-              <button type='submit' className='mt-8 bg-primary rounded-md w-1/2 text-white py-2 font-bold flex justify-center' disabled={isCreating}>
-                {isCreating ? <Loading className="w-6 h-6 animate-spin" /> : <p>Create Lesson</p>}
-              </button>
-              {errorMessage !== "" && <p className='text-red-600 font-medium mt-2'>{errorMessage}</p>}
+              <input type='submit' className='hidden' id='submit-form' />
             </form>
           </div>
 
           <div className='w-3/5'>
-            <p className='font-bold text-2xl'>Pose Creation</p>
+            <p className='font-bold text-2xl'>Pose Registration</p>
             
             <div className='flex'>
               <div className='w-1/3 relative aspect-square mt-2'> 
@@ -173,7 +181,7 @@ const create = () => {
             </div>
           </div>
         </div>
-      </div>
+        </RegularContainer>
     </>
   )
 }
