@@ -46,7 +46,10 @@ const register = () => {
         'username': username
       }
 
-      setDoc(doc(firebase_db, "users", credentials.user.uid), newUser)
+      setDoc(doc(firebase_db, "users", credentials.user.uid), newUser).then(() => {
+        setIsCreating(false)
+        router.push("/dashboard")
+      })
       .catch((error)=> {
         console.log(error)
       })
@@ -55,14 +58,13 @@ const register = () => {
       switch(errorCode) {
         case "auth/email-already-in-use":
           setError("This email has already been registered with an account. Login or use a different email.");
+          setIsCreating(false);
           break;
         default:
           setError("Something went wrong.")
+          setIsCreating(false)
       }
     })
-
-    setIsCreating(false)
-    router.push("/dashboard")
   }
 
   return (

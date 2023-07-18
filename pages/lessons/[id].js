@@ -144,7 +144,7 @@ const ViewLesson = () => {
           </div>
 
           <div className='w-1/2 flex flex-col'>
-            <div className='w-72 2xl:w-96 mx-auto'>
+            <div className='w-72 xl:w-96 mx-auto'>
               <HandposeTest 
                 curls={lesson.lesson_pose_curls} 
                 directions={lesson.lesson_pose_directions} 

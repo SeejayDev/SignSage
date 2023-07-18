@@ -48,7 +48,10 @@ const register = () => {
         'username': username
       }
 
-      setDoc(doc(firebase_db, "users", credentials.user.uid), newUser)
+      setDoc(doc(firebase_db, "users", credentials.user.uid), newUser).then(() => {
+        setIsCreating(false)
+        //router.push("/dashboard")
+      })
       .catch((error)=> {
         console.log(error)
       })
@@ -62,9 +65,6 @@ const register = () => {
           setError("Something went wrong.")
       }
     })
-
-    setIsCreating(false)
-    router.push("/dashboard")
   }
 
   return (

@@ -62,6 +62,10 @@ const profile = () => {
     setIsLoading(false)
   }
 
+  useEffect(() => {
+    setErrorMessage("")
+  }, [tabIndex])
+
   return (
     <>
       <Header />
@@ -105,7 +109,7 @@ const profile = () => {
                   <input type="text" className="border-2 rounded-md p-2 mt-2" placeholder="New Username" name="username" />
                   <div className='flex-1'></div>
 
-                  {errorMessage !== "" && <p className='font-medium text-red-600'>{errorMessage}</p> }
+                  {errorMessage !== "" && <p className='font-medium text-red-600 mb-2'>{errorMessage}</p> }
 
                   <button type="submit" className="bg-primary text-white rounded-md py-2 font-bold flex justify-center">
                     {isLoading ? <Loading className="w-6 h-6 animate-spin" /> : <p>Update Username</p>}
