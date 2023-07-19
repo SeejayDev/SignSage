@@ -82,6 +82,7 @@ const edc = () => {
     var courseLessonIdList = courseLessonList.map((lesson) => lesson.id)
 
     const updatedCourse = {...course, course_lesson_id_list: courseLessonIdList}
+    delete updatedCourse.id
     await setDoc(doc(firebase_db, "courses", course.id), updatedCourse)
     router.push("/dashboard")
   }
