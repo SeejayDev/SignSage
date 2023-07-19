@@ -19,21 +19,26 @@ const HandposeCamera = (props) => {
     setActivated(value)
   }
 
-  // function to perform the detection
+  // function to initiate the detection models
   const runDetection = async () => {
+    // create a new instance of the class used to convert landmarks into directions/curls
     const estimator = new FingerPoseEstimator()
     
+    // load the detection model from TensorFlow.js
     const model = handPoseDetection.SupportedModels.MediaPipeHands;
     const detectorConfig = {
       runtime: 'mediapipe',
       modelType: 'full',
       solutionPath: '/model'
     };
+
+    // create an instance of the model with the configuration set
     var detector = await handPoseDetection.createDetector(model, detectorConfig);
     
+    // begin running the detection 10 times every second 
     setInterval(()=> {
       detect(detector, estimator)
-    }, 50)
+    }, 100)
   }
 
   // function to get values from webcam
@@ -44,18 +49,17 @@ const HandposeCamera = (props) => {
       const videoWidth = video.videoWidth
       const videoHeight = video.videoHeight
 
-      // Set video width and height
+      // Set video and canvas width and height
       webcamRef.current.video.width = videoWidth
       webcamRef.current.video.height = videoHeight
-
-      // Set canvas width and height
       canvasRef.current.width = videoWidth
       canvasRef.current.height = videoHeight
   
       // Make detections
-      const detections = await model.estimateHands(video, true)
+      const detections = await model.estimateHands(video)
+      
+      // Check if any hands were detected
       if (detections?.length !== 0) {
-        //console.log(detections)
         const keypoints = detections[0].keypoints3D
         var landmarks = []
         for (let i = 0; i < keypoints.length; i++) {

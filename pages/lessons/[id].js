@@ -1,3 +1,9 @@
+// Programmer Name  : Mr.Yeoh Cheng Jin, APU, BSc (Hons) in Computer Science (Intelligent Systems)
+// Program Name     : lessons/[id].js
+// Description      : To view a lesson's details.
+// First Written on : 16 June 2023
+// Edited on        : 19 July 2023
+
 import HandposeTest from '@components/HandposeTest'
 import Header from '@components/Header'
 import { firebase_db } from '@firebase/config'

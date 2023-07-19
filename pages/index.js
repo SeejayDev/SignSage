@@ -1,3 +1,9 @@
+// Programmer Name  : Mr.Yeoh Cheng Jin, APU, BSc (Hons) in Computer Science (Intelligent Systems)
+// Program Name     : index.js
+// Description      : Landing page of the website.
+// First Written on : 7 June 2023
+// Edited on        : 19 July 2023
+
 import Header from "@components/Header";
 import Image from "next/image";
 import RegularContainer from "src/layouts/RegularContainer";
@@ -12,7 +18,7 @@ import Link from "next/link";
 export default function Home() {
   return(
     <>
-      <div className="w-screen h-screen flex items-center flex-col">
+      <div className="min-w-screen min-h-screen flex items-center flex-col">
         <Header />
         
         <RegularContainer>

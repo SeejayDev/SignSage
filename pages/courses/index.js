@@ -1,3 +1,9 @@
+// Programmer Name  : Mr.Yeoh Cheng Jin, APU, BSc (Hons) in Computer Science (Intelligent Systems)
+// Program Name     : courses/index.js
+// Description      : To view all the courses in the system.
+// First Written on : 8 June 2023
+// Edited on        : 18 July 2023
+
 import Header from '@components/Header'
 import { firebase_db } from '@firebase/config'
 import { collection, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore'

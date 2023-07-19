@@ -1,3 +1,9 @@
+// Programmer Name  : Mr.Yeoh Cheng Jin, APU, BSc (Hons) in Computer Science (Intelligent Systems)
+// Program Name     : dashboard/register.js
+// Description      : To register a new teacher account.
+// First Written on : 14 June 2023
+// Edited on        : 19 July 2023
+
 import Header from "@components/Header";
 import { firebase_auth, firebase_db } from "@firebase/config";
 import { createUserWithEmailAndPassword } from "firebase/auth";

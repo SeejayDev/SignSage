@@ -48,30 +48,44 @@ const HandposeTest = (props) => {
     let clue = ""
     let completedSteps = 0
     for (let i = 0; i < 5; i++) {
+      // determine if the direction of the finger matches
       let directionMatch = false
       if (sways[i] === 1) {
+        // check if the direction matches any of the sway directions
         directionMatch = checkDirectionWithSway(directions[i], detectedDirections[i])
       } else {
+        // if sway is not allowed, directly compare the directions
         directionMatch = directions[i] === detectedDirections[i]
       }
 
+      // determine if the curl of the finger matches
       let curlMatch = detectedCurls[i] === curls[i]
 
+      // if both curl and direction match:
       if (directionMatch && curlMatch) {
+        // mark the finger result as true
         testResults[i] = true
+
+        // add 2 to the completed steps count
         completedSteps += 2
       } else {
+        // if either the curl or direction do not match:
+        // mark the finger result as false
         testResults[i] = false
 
+        // check if the student got either the direction or curl correct
         if (directionMatch) {completedSteps += 1}
         if (curlMatch) {completedSteps += 1}
         
+        // check if the clue variable has already been set before
         if (clue === "" && cameraActive) {
-          if (detectedCurls[i] !== curls[i]) {
+          // check which aspect did not match, and set the instruction variable
+          if (!curlMatch) {
             clue = `The ${fingerList[i]} should be ${curlOptions[curls[i]]}`
-          } else if (detectedDirections[i] !== directions[i]) {
+          } else if (!directionMatch) {
             clue = `The ${fingerList[i]} should point ${directionOptions[directions[i]].orientation}`
-
+            
+            // some directions do not have the "to the left/right" value
             if (directionOptions[directions[i].direction !== null]) {
               clue += `to the ${directionOptions[directions[i]].direction}`
             }
@@ -79,6 +93,8 @@ const HandposeTest = (props) => {
         }
       }
     }
+
+    // update the page with the detection results
     setStepsMatched(completedSteps)
     setInstruction(clue)
     setTestResults(testResults)
@@ -93,7 +109,10 @@ const HandposeTest = (props) => {
 
         
         <div className='relative w-full aspect-square mt-4'>
-          <HandposeCamera setDetectedCurls={setDetectedCurls} setDetectedDirections={setDetectedDirections} setActivated={setCameraActive} />
+          <HandposeCamera 
+            setDetectedCurls={setDetectedCurls} 
+            setDetectedDirections={setDetectedDirections} 
+            setActivated={setCameraActive} />
         </div>
 
         <div className={`grid grid-cols-5 w-full mx-auto gap-2 transition-all ${cameraActive ? "mt-8" : "mt-4"}`}>
@@ -113,43 +132,6 @@ const HandposeTest = (props) => {
             <p className=''>{instruction}</p>
           </div>
         }
-        
-        {/* <div className='mt-4 space-y-2'>
-          {testResults.map((result, idx) => {
-            if (!result) {
-              return (
-                <>
-                  {detectedCurls[idx] !== curls[idx] &&
-                    <div className='p-2 rounded-md bg-red-400 text-white w-96 font-medium flex items-center'>
-                      <Notification className="w-5 h-5 mr-2" />
-                      <p className=''>The {fingerList[idx]} should be {curlOptions[curls[idx]]}</p>
-                    </div>
-                  }
-                  {detectedDirections[idx] !== directions[idx] &&
-                    <div className='p-2 rounded-md bg-red-400 text-white w-96 font-medium flex items-center'>
-                      <Notification className="w-6 h-6 mr-2" />
-                      <p className=''>The {fingerList[idx]} should point {directionOptions[directions[idx]].orientation} {directionOptions[directions[idx]].direction && `to the ${directionOptions[directions[idx]].direction}`}</p>
-                    </div>
-                  }
-                </>
-              )
-            }
-          })}
-        </div> */}
-        
-        {/* <div className='flex'>
-          <div>
-            <p>Input Codes</p>
-            <p>{curls}</p>
-            <p>{directions}</p>
-          </div>
-
-          <div>
-            <p>Camera Codes</p>
-            <p>{detectedCurls}</p>
-            <p>{detectedDirections}</p>
-          </div>
-        </div> */}
       </div>
     </>
   )

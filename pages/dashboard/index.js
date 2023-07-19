@@ -1,6 +1,11 @@
+// Programmer Name  : Mr.Yeoh Cheng Jin, APU, BSc (Hons) in Computer Science (Intelligent Systems)
+// Program Name     : dashboard/index.js
+// Description      : To view the user dashboard.
+// First Written on : 14 June 2023
+// Edited on        : 19 July 2023
+
 import Header from '@components/Header'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import useFirebaseAuth from 'src/hooks/useFirebaseAuth'
 import RegularContainer from 'src/layouts/RegularContainer'

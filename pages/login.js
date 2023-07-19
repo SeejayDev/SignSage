@@ -1,3 +1,9 @@
+// Programmer Name  : Mr.Yeoh Cheng Jin, APU, BSc (Hons) in Computer Science (Intelligent Systems)
+// Program Name     : login.js
+// Description      : To log in to a user's account.
+// First Written on : 7 June 2023
+// Edited on        : 19 July 2023
+
 import Header from '@components/Header'
 import { firebase_auth } from '@firebase/config'
 import { browserSessionPersistence, setPersistence, signInWithEmailAndPassword } from 'firebase/auth'

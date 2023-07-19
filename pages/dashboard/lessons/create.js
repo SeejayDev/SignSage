@@ -1,7 +1,10 @@
-import CurlSelect from '@components/CurlSelect'
-import DirectionSelect from '@components/DirectionSelect'
+// Programmer Name  : Mr.Yeoh Cheng Jin, APU, BSc (Hons) in Computer Science (Intelligent Systems)
+// Program Name     : dashboard/lessons/create.js
+// Description      : To create a new course.
+// First Written on : 12 June 2023
+// Edited on        : 19 July 2023
+
 import Header from '@components/Header'
-import Toggle from '@components/Toggle'
 import React, { useState } from 'react'
 import { Plus } from 'src/icons/Plus'
 import { Trash } from 'src/icons/Trash'
@@ -10,7 +13,6 @@ import { firebase_db, firebase_storage } from '@firebase/config'
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import Loading from 'src/icons/Loading'
-import HandposeSelect from '@components/HandposeSelect'
 import HandposeSelectSingleLine from '@components/HandposeSelectSingleLine'
 import HandposeCamera from '@components/HandposeCamera'
 import RegularContainer from 'src/layouts/RegularContainer'

@@ -1,8 +1,8 @@
 // Programmer Name  : Mr.Yeoh Cheng Jin, APU, BSc (Hons) in Computer Science (Intelligent Systems)
-// Program Name     : viewCourse.js
-// Description      : To view the contents of an individual lesson.
+// Program Name     : courses/[id].js
+// Description      : To view the contents of an individual course.
 // First Written on : 10 June 2023
-// Edited on        : 16 July 2023
+// Edited on        : 18 July 2023
 
 import Header from '@components/Header'
 import { firebase_db } from '@firebase/config'

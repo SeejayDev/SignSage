@@ -1,3 +1,9 @@
+// Programmer Name  : Mr.Yeoh Cheng Jin, APU, BSc (Hons) in Computer Science (Intelligent Systems)
+// Program Name     : dashboard/courses/edit/[id].js
+// Description      : To edit a course by its ID.
+// First Written on : 9 June 2023
+// Edited on        : 19 July 2023
+
 import Header from '@components/Header'
 import { firebase_db } from '@firebase/config'
 import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, setDoc } from 'firebase/firestore'

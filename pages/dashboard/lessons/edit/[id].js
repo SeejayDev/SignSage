@@ -1,5 +1,10 @@
+// Programmer Name  : Mr.Yeoh Cheng Jin, APU, BSc (Hons) in Computer Science (Intelligent Systems)
+// Program Name     : dashboard/lessons/edit/[id].js
+// Description      : To edit a lesson by its ID.
+// First Written on : 9 June 2023
+// Edited on        : 19 July 2023
+
 import HandposeCamera from '@components/HandposeCamera'
-import HandposeSelect from '@components/HandposeSelect'
 import HandposeSelectSingleLine from '@components/HandposeSelectSingleLine'
 import Header from '@components/Header'
 import { firebase_db, firebase_storage } from '@firebase/config'
