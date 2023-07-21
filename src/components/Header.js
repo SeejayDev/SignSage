@@ -24,15 +24,15 @@ const Header = () => {
         
         <div className='flex items-center space-x-6 font-medium'>
           {/* Common Links */}
-          <Link href="/">Home</Link>
-          <Link href="/courses">Courses</Link>
+          <Link href="/" className='hover:border-primary border-white border-b-2'>Home</Link>
+          <Link href="/courses" className='hover:border-primary border-white border-b-2'>Courses</Link>
 
           {user ? (
             <>
               <Link href="/dashboard">
-                <button className=''>Dashboard</button>
+                <button className='hover:border-primary border-white border-b-2'>Dashboard</button>
               </Link>
-              <button onClick={doLogout} className='text-primary'>
+              <button onClick={doLogout} className='text-primary hover:border-primary border-white border-b-2'>
                 Logout
               </button>
             </>
