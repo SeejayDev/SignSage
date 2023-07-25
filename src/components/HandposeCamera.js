@@ -110,7 +110,7 @@ const HandposeCamera = (props) => {
                 </div>
             }
 
-            <div className='w-full h-full flex flex-col items-center justify-center text-white'>
+            <div className={`w-full h-full flex flex-col items-center justify-center text-white ${active && "hidden"}`}>
               <p className=''>Turn camera on:</p>
               <button id='camBtn' className='bg-white rounded-lg p-3 text-primary mt-2' onClick={()=>toggleActive(!active)}>
                 <Camera className="w-8 h-8" />

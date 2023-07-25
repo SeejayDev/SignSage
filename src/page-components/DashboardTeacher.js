@@ -37,7 +37,8 @@ const DashboardTeacher = () => {
   }
 
   const deleteLesson = async (id) => {
-    var performDelete = confirm("Are you sure you want to delete Lesson: " + id)
+    let lessonToDelete = fetchedLessonList.find((lesson) => lesson.id === id)
+    var performDelete = confirm("Are you sure you want to delete lesson: " + lessonToDelete.lesson_title)
     if (performDelete) {
       let lessonToDelete = fetchedLessonList.find((lesson) => lesson.id === id)
       let imagesToDelete = lessonToDelete.lesson_images

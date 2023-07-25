@@ -79,7 +79,15 @@ const profile = () => {
       <RegularContainer>
         <div className='flex mt-8'>
           <div className='w-3/5 flex flex-col pb-4'>
-            <div className='flex font-bold text-4xl uppercase space-x-2 items-center'>
+                        
+            <Link href="/dashboard">
+              <div className='flex items-center text-sm text-primary hover:underline font-medium'>
+                <RightArrow className="transform rotate-180 h-5 w-5" />
+                <p>Back to Dashboard</p>
+              </div>
+            </Link>
+
+            <div className='flex font-bold text-4xl uppercase space-x-2 items-center mt-4'>
               <p className="bg-primary p-2 rounded-md text-white">Edit</p>
               <p className=''>profile</p>
             </div>
@@ -97,13 +105,6 @@ const profile = () => {
                 <p className={`${tabIndex !== 1 ? "text-purple-600" : "text-white"} relative z-20`}>Update Password</p>
               </button>
             </div>
-            
-            <Link href="/dashboard">
-              <div className='flex items-center mt-4 text-sm text-primary hover:underline font-medium'>
-                <RightArrow className="transform rotate-180 h-5 w-5" />
-                <p>Back to Dashboard</p>
-              </div>
-            </Link>
           </div>
 
           <div className='w-2/5 border-4 p-8 rounded-md border-primary'>

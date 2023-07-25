@@ -82,6 +82,36 @@ const viewCourse = () => {
     })
   }
 
+  const saveCourse = async (id) => {
+    // prompt hint if user is not signed in or a student
+    if (!user) {
+      setShowLoginHint(true)
+      setTimeout(()=> setShowLoginHint(false), 3000)
+    } else {
+      let existingLikedCourses = []
+      if (userProfile.saved_courses) {
+        existingLikedCourses = [...userProfile.saved_courses]
+      }
+      updateDoc(doc(firebase_db, "users", user.uid), {
+        saved_courses: [...existingLikedCourses, id]
+      }).then(() => {
+        refreshUserProfile()
+      })
+    }
+  }
+
+  const unsaveCourse = async (id) => {
+    let savedCourses = [...userProfile.saved_courses]
+    let idxOfCourseToRemove = savedCourses.indexOf(id)
+    savedCourses.splice(idxOfCourseToRemove, 1)
+
+    updateDoc(doc(firebase_db, "users", user.uid), {
+      saved_courses: savedCourses
+    }).then(() => {
+      refreshUserProfile()
+    })
+  }
+
   // when the component first renders and the ID is loaded, fetch the course and its list of lessons
   useEffect(()=>{
     if (id) {
@@ -113,7 +143,24 @@ const viewCourse = () => {
                   <p>Back</p>
                 </div>
               </button>
-              <p className='text-4xl font-bold mt-4'>{course.course_title}</p>
+              <div className='flex items-center mt-4 space-x-6'>
+                <p className='text-4xl font-bold'>{course.course_title}</p>
+
+                {userProfile?.role !== "teacher" &&
+                  <>
+                    {userProfile?.saved_courses?.indexOf(id) >= 0 ?
+                      <button className='cursor-pointer' onClick={() => unsaveCourse(course.id)}>
+                        <FilledHeart className="w-8 h-8 text-red-600" />
+                      </button>
+                      :
+                      <button className='cursor-pointer' onClick={() => saveCourse(course.id)}>
+                        <EmptyHeart className="w-8 h-8 text-white" />
+                      </button>
+                    }
+                  </>
+                }
+              </div>
+
               <p className='mt-2'>{course.course_description}</p>
             </div>
           : <div></div>}
@@ -130,13 +177,13 @@ const viewCourse = () => {
         <div className='grid grid-cols-3 mt-8 gap-8'>
           {lessonList.map((lesson) => {
             return (
-              <div key={lesson.id} className='bg-white rounded-lg shadow-lg flex flex-col relative overflow-hidden'>
-                <div className='p-4'> 
+              <div key={lesson.id} className='bg-white rounded-lg shadow-lg flex flex-col relative overflow-hidden '>
+                <div className='p-4 flex-1'> 
                   <p className='font-bold text-xl '>{lesson.lesson_title}</p>
                   <p className='text-sm italic line-clamp-3 mt-2'>{lesson.lesson_description}</p>
                 </div>
                 
-                <div className='flex border-t-2 mt-2 divide-x-2 flex-1 w-full' >
+                <div className='flex border-t-2 mt-2 divide-x-2 w-full' >
                   <Link href={`/lessons/${lesson.id}`} className='w-1/2 flex items-center justify-center text-primary space-x-2 py-3'>
                       <Eye className="w-6 h-6" />
                       <p className='font-bold'>View</p>

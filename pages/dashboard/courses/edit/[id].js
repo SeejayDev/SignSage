@@ -7,9 +7,11 @@
 import Header from '@components/Header'
 import { firebase_db } from '@firebase/config'
 import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, setDoc } from 'firebase/firestore'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Loading from 'src/icons/Loading'
+import { RightArrow } from 'src/icons/RightArrow'
 import { SearchIcon } from 'src/icons/SearchIcon'
 import RegularContainer from 'src/layouts/RegularContainer'
 
@@ -135,6 +137,12 @@ const edc = () => {
       {course ?
       <>
         <RegularContainer className="mt-8 flex-1 flex flex-col">
+            <Link href="/dashboard">
+              <div className='flex items-center text-sm mb-4 text-primary hover:underline font-medium'>
+                <RightArrow className="transform rotate-180 h-5 w-5" />
+                <p>Back to Dashboard</p>
+              </div>
+            </Link>
           <div className='flex items-center justify-between'>
             <div className='flex font-bold text-4xl uppercase space-x-2 items-center'>
               <p className="bg-primary p-2 rounded-md text-white">Edit</p>

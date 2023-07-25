@@ -16,6 +16,8 @@ import Loading from 'src/icons/Loading'
 import HandposeSelectSingleLine from '@components/HandposeSelectSingleLine'
 import HandposeCamera from '@components/HandposeCamera'
 import RegularContainer from 'src/layouts/RegularContainer'
+import Link from 'next/link';
+import { RightArrow } from 'src/icons/RightArrow';
 
 const create = () => {
   const [curls, setCurls] = useState([0,0,0,0,0])
@@ -98,6 +100,13 @@ const create = () => {
       <Header />
 
       <RegularContainer className="mt-8">
+        <Link href="/dashboard">
+          <div className='flex items-center text-sm mb-4 text-primary hover:underline font-medium'>
+            <RightArrow className="transform rotate-180 h-5 w-5" />
+            <p>Back to Dashboard</p>
+          </div>
+        </Link>
+
         <div className='flex items-center justify-between'>
           <div className='flex font-bold text-4xl uppercase space-x-2 items-center'>
             <p className="bg-primary p-2 rounded-md text-white">Create</p>

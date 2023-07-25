@@ -7,9 +7,11 @@
 import Header from '@components/Header'
 import { firebase_db } from '@firebase/config'
 import { addDoc, collection, getDocs, orderBy, query } from 'firebase/firestore'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Loading from 'src/icons/Loading'
+import { RightArrow } from 'src/icons/RightArrow'
 import { SearchIcon } from 'src/icons/SearchIcon'
 import RegularContainer from 'src/layouts/RegularContainer'
 
@@ -103,6 +105,13 @@ const create = () => {
       <Header />
 
       <RegularContainer className="mt-8 flex-1 flex flex-col">
+          <Link href="/dashboard">
+            <div className='flex items-center text-sm mb-4 text-primary hover:underline font-medium'>
+              <RightArrow className="transform rotate-180 h-5 w-5" />
+              <p>Back to Dashboard</p>
+            </div>
+          </Link>
+
         <div className='flex items-center justify-between'>
           <div className='flex font-bold text-4xl uppercase space-x-2 items-center'>
             <p className="bg-primary p-2 rounded-md text-white">Create</p>
@@ -111,7 +120,7 @@ const create = () => {
 
           <div className='flex items-center space-x-2'>
             <p className='text-red-600 font-medium'>{errorMessage}</p>
-            <label htmlFor='submit-form' className='px-4 py-2 bg-primary text-white rounded-md font-bold hover:shadow-lg hover:shadow-primary/30 transition-shadow'>
+            <label htmlFor='submit-form' className='px-4 py-2 bg-primary text-white rounded-md font-bold hover:shadow-lg cursor-pointer hover:shadow-primary/30 transition-shadow'>
               {isCreating ? <Loading className="w-6 h-6 animate-spin" /> : <p>Create</p>}
             </label>
           </div>

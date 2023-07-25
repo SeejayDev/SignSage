@@ -10,10 +10,12 @@ import Header from '@components/Header'
 import { firebase_db, firebase_storage } from '@firebase/config'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import Loading from 'src/icons/Loading'
 import { Plus } from 'src/icons/Plus'
+import { RightArrow } from 'src/icons/RightArrow'
 import { Trash } from 'src/icons/Trash'
 
 const editLesson = () => {
@@ -132,6 +134,13 @@ const editLesson = () => {
 
     {lesson ?
       <div className='container max-w-7xl mx-auto font-poppins mt-8'>
+        <Link href="/dashboard">
+          <div className='flex items-center text-sm mb-4 text-primary hover:underline font-medium'>
+            <RightArrow className="transform rotate-180 h-5 w-5" />
+            <p>Back to Dashboard</p>
+          </div>
+        </Link>
+
         <div className='flex items-center justify-between'>
           <div className='flex font-bold text-4xl uppercase space-x-2 items-center'>
             <p className="bg-primary p-2 rounded-md text-white">Edit</p>
@@ -162,7 +171,7 @@ const editLesson = () => {
                 name='lesson_description' 
                 className='rounded-md w-full mt-1 p-1 resize-none' 
                 placeholder='Lesson Description' 
-                rows={lesson.lesson_description?.split(/\r\n|\r|\n/).length}
+                rows={lesson.lesson_description?.split(/\r\n|\r|\n/).length + 1}
                 value={lesson.lesson_description}
                 onChange={updateLessonState} />
 
@@ -173,7 +182,7 @@ const editLesson = () => {
                   name='lesson_instructions' 
                   className='rounded-md w-full p-1 resize-none' 
                   placeholder='Content' 
-                  rows={lesson.lesson_instructions?.split(/\r\n|\r|\n/).length} 
+                  rows={lesson.lesson_instructions?.split(/\r\n|\r|\n/).length + 1} 
                   value={lesson.lesson_instructions}
                   onChange={(e)=>{
                     updateHeight(e)
