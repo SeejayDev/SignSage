@@ -34,7 +34,7 @@ const courses = () => {
 
   const saveCourse = async (id) => {
     // prompt hint if user is not signed in or a student
-    if (!user) {
+    if (!user || userProfile?.role === "teacher") {
       setShowLoginHint(true)
       setTimeout(()=> setShowLoginHint(false), 3000)
     } else {
