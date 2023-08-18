@@ -109,7 +109,17 @@ const edc = () => {
   const displayCourseLessons = () => {
     let courseLessonIds = course.course_lesson_id_list
 
-    let tempLessonList = courseLessonIds.map((id) => lessonList.find((lesson) => lesson.id === id))
+    var tempLessonList = []
+    for (let i = 0; i < courseLessonIds.length; i++) {
+      var id = courseLessonIds[i]
+      var lesson = lessonList.find((lesson) => lesson.id === id)
+
+      if (lesson) {
+        tempLessonList.push(lesson)
+      }
+    }
+
+    //let tempLessonList = courseLessonIds.map((id) => lessonList.find((lesson) => lesson.id === id))
     setCourseLessonList(tempLessonList)
   }
 
